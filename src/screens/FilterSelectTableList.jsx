@@ -393,10 +393,11 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   btn: {
-    backgroundColor: '#007bff',
+   backgroundColor: "#003961",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 6,
+     marginBottom:40
   },
   disabledBtn: {
     backgroundColor: '#ccc',
