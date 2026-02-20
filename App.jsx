@@ -27,8 +27,8 @@ const App = () => {
   const deviceId = DeviceInfo.getUniqueId();     // Unique ID (may reset on uninstall)
   const model = DeviceInfo.getModel();
 
-  console.log('Device ID:', deviceId);
-  console.log("model", model)
+  // console.log('Device ID:', deviceId);
+  // console.log("model", model)
 
   const requestNotificationPermission = async () => {
     try {
@@ -57,7 +57,7 @@ const App = () => {
       await messaging.registerDeviceForRemoteMessages(); // still needed
       const token = await getToken(messaging);
 
-      console.log('FCM Token:', token);
+      // console.log('FCM Token:', token);
 
       await AsyncStorage.setItem('FCM_TOKEN', token);
 
@@ -76,7 +76,7 @@ const App = () => {
     const messaging = getMessaging(getApp());
 
     const unsubscribe = onMessage(messaging, async remoteMessage => {
-      console.log('Foreground message received:', remoteMessage);
+      // console.log('Foreground message received:', remoteMessage);
 
       if (remoteMessage?.notification) {
         setNotification(remoteMessage.notification);

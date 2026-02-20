@@ -44,9 +44,9 @@ const ForceUpdate = () => {
 
       const needUpdate = compareVersions(currentVersion, latestVersion);
 
-      console.log("Current:", currentVersion);
-      console.log("Latest:", latestVersion);
-      console.log("Need Update:", needUpdate);
+      // console.log("Current:", currentVersion);
+      // console.log("Latest:", latestVersion);
+      // console.log("Need Update:", needUpdate);
 
       if (needUpdate) {
         setUpdateUrl(serverData.app_url);

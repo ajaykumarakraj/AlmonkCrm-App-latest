@@ -1,35 +1,79 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Image } from "react-native";
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  ImageBackground, 
+  ActivityIndicator, 
+  Dimensions 
+} from "react-native";
+
+const { width, height } = Dimensions.get("window");
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
-    // Simulate a network request or some initialization before navigating
-    setTimeout(() => {
-      // After a delay, navigate to the Login screen
+    const timer = setTimeout(() => {
       navigation.replace("Login");
-    }, 3000); // 3 seconds for the splash screen
+    }, 3000); // 3 seconds
+    return () => clearTimeout(timer);
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <Image source={require('../../Assets/images/FUTUREKEY-HOMES-3.1.png')} style={{ width: 200, height: 200 }} />
-      <Text style={styles.text}>Welcome to the App</Text>
-    </View>
+    <ImageBackground
+      source={require("../../Assets/images/login-bg.jpg")} // stylish background image
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.overlay}>
+        <Image 
+          source={require('../../Assets/images/FUTUREKEY-HOMES-3.1.png')} 
+          style={styles.logo} 
+          resizeMode="contain"
+        />
+        <Text style={styles.title}>Almonk Digital</Text>
+        <Text style={styles.subtitle}>CRM</Text>
+        <ActivityIndicator size="large" color="#FF6B00" style={styles.loader} />
+      </View>
+    </ImageBackground>
   );
 };
 
+export default SplashScreen;
+
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
+    width,
+    height,
   },
-  text: {
-    fontSize: 24,
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.35)', // semi-transparent overlay
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    width: width * 0.6,
+    height: height * 0.25,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 32,
+    color: '#fff',
+    fontWeight: '800',
+    textAlign: 'center',
+    letterSpacing: 1,
+  },
+  subtitle: {
+    fontSize: 28,
+    color: '#FF6B00',
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 30,
+    letterSpacing: 2,
+  },
+  loader: {
     marginTop: 20,
-    fontWeight: "bold",
   },
 });
-
-export default SplashScreen;

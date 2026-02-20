@@ -189,7 +189,7 @@ const AddClientScreen = ({ navigation }) => {
         team_leader: teamleader,
         agent,
       };
-      console.log(formData)
+      // console.log(formData)
       const res = await ApiClient.post("/create-customer", formData, {
         headers: {
           Authorization: `Bearer ${token}`,

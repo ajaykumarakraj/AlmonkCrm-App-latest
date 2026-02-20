@@ -6,6 +6,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useAuth } from '../context/AuthContext';
 import { SelectList } from "react-native-dropdown-select-list";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FilterForm = ({ navigation }) => {
     const { user, token } = useAuth();
@@ -21,16 +22,16 @@ const FilterForm = ({ navigation }) => {
   const [agentList, setAgentList] = useState([]);
   const [agent, setAgent] = useState("");
 
-
-
+const [Teamleadername,setTeamleadername]=useState("")
+const [agentName, setAgentName] = useState("");
     const [leadsourcelist,setLeadsourceList]=useState([])
-    const [leadsource,setLeadsource]=useState("facebook")
+    const [leadsource,setLeadsource]=useState("")
 
     const [leadType,setLeadType]=useState([])
     const [projectList,setProjectList]=useState([])
-    const [project,setProject]=useState("all")
-
-const LeadType=[,{value:"New Lead"},{value:"InProcess Lead"},{value:"Hot Lead"},{value:"Archived Lead"},{value:"Converted Lead"},{value:"Reassign Lead"}]
+    const [project,setProject]=useState("")
+// console.log(teamleaderList,Teamleadername)
+const LeadType=[{value:"New Lead"},{value:"InProcess Lead"},{value:"Hot Lead"},{value:"Archived Lead"},{value:"Converted Lead"},{value:"Reassign Lead"}]
 // console.log(project,"project")
 
 // team Leader and agent list api 
@@ -44,7 +45,14 @@ const fetchTeamLeaders = async () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 200) {
-        setTeamleaderList(res.data.data.map((tl) => ({ key: tl.user_id.toString(), value: tl.name })));
+        setTeamleaderList(
+         res.data.data
+  .map((tl) => ({
+    key: tl.user_id.toString(),
+    value: tl.name
+  }))
+  .sort((a, b) => a.value.localeCompare(b.value))
+            );
       }
     } catch (error) {
       console.log("Team leader fetch error:", error);
@@ -60,6 +68,7 @@ useEffect(() => {
   if (!id) return;
 
   setTeamleader(id);
+  
 
   try {
     const res = await axios.get(
@@ -88,34 +97,86 @@ useEffect(() => {
 
 // navigation section 
 
- const handlSubmit = () => {
-    navigation.navigate('filtertable', { leadsource ,project,leadType,fromdate,todate,currentForm});
+const handlSubmit = async () => {
+  const filterData = {
+    leadsource,
+    project,
+    leadType,
+    fromDate,
+    toDate,
+    currentForm
   };
+
+  await AsyncStorage.setItem('FILTER_DATA', JSON.stringify(filterData));
+
+  navigation.navigate('filtertable', filterData);
+};
+
 
 // console.log(teamleader,agent)
 
-   const handlSubmitTL = () => {
-   if (!teamleader ) {
-  Alert.alert(
-    "Validation Error",
-    "Please select Team Leader"
-  );
-  return;
-}
-if (!agent) {
-  Alert.alert(
-    "Validation Error",
-    "Please select  Agent"
-  );
-  return;
-}
-    navigation.navigate('filterHomeScreen', { leadsource ,project,leadType,fromdate,todate,currentForm, teamleader,agent});
+  const handlSubmitTL = async () => {
+  if (!teamleader) {
+    Alert.alert("Validation Error", "Please select Team Leader");
+    return;
+  }
+  if (!agent) {
+    Alert.alert("Validation Error", "Please select Agent");
+    return;
+  }
+
+  const filterData = {
+   leadsource,
+  project,
+  leadType,
+  fromDate,
+  toDate,
+  currentForm,
+  teamleader,
+  teamleaderName: Teamleadername,
+  agent,
+  agentName
   };
+
+  await AsyncStorage.setItem('FILTER_DATA', JSON.stringify(filterData));
+
+  navigation.navigate('filterHomeScreen', filterData);
+};
+
+
+
+useEffect(() => {
+  loadSavedFilters();
+}, []);
+
+const loadSavedFilters = async () => {
+  try {
+    const savedData = await AsyncStorage.getItem('FILTER_DATA');
+console.log(savedData,"savedData")
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+// console.log(parsedData.leadsource)
+      setLeadsource(parsedData.leadsource || "");
+      setProject(parsedData.project || "");
+      setLeadType(parsedData.leadType || "");
+      setFromDate(parsedData.fromDate ? new Date(parsedData.fromDate) : null);
+      setToDate(parsedData.toDate ? new Date(parsedData.toDate) : null);
+      setCurrentForm(parsedData.currentForm || "lead");
+      setTeamleader(parsedData.teamleader || "");
+      setAgent(parsedData.agent || "");
+      setTeamleadername(parsedData.teamleaderName || "");
+      setAgentName(parsedData.agentName || "");
+    }
+  } catch (error) {
+    console.log("Error loading filters:", error);
+  }
+};
+
     // date section 
-  const formatDate = (date) => {
-    if (!date) return null;
-    return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-  };
+ const formatDate = (date) => {
+  if (!date) return null;
+  return date.toISOString().split('T')[0];
+};
 
 const fromdate=formatDate(fromDate)
 const todate=formatDate(toDate)
@@ -170,12 +231,12 @@ const fetchRequirements = async () => {
                         {/* <Text style={styles.title}>Form 1 - Basic</Text> */}
 
                         {/* lead source Dropdown */}
-                        <View style={styles.pickerWrapper}><SelectList data={leadsourcelist} setSelected={setLeadsource} placeholder="All Lead Source" search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={leadsourcelist} setSelected={setLeadsource} placeholder={leadsource} search={false} /></View>
 
                        {/* Project Dropdown */}
-                        <View style={styles.pickerWrapper}><SelectList data={projectList} setSelected={setProject} placeholder="All Project" search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={projectList} setSelected={setProject} placeholder={project} search={false} /></View>
                        {/* lead type  */}
-                        <View style={styles.pickerWrapper}><SelectList data={LeadType} setSelected={setLeadType} placeholder="Lead Status" search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={LeadType} setSelected={setLeadType} placeholder={leadType} search={false} /></View>
  {/* Date Pickers */}
     <View style={styles.datesec}>
 
@@ -237,30 +298,37 @@ const fetchRequirements = async () => {
   style={styles.pickerWrapper}
   pointerEvents={user.role === "Team Leader" ? "none" : "auto"}
 >
-  <SelectList
-    data={teamleaderList}
-    setSelected={handleTeamLeaderSelect}
-    placeholder={
-      user.role === "Team Leader" ? user.name : "Team Leader"
-    }
-    search={true}
-    boxStyles={
-      user.role === "Team Leader"
-        ? { backgroundColor: "#eee", opacity: 0.8 }
-        : {}
-    }
-  />
+ <SelectList
+  data={teamleaderList}
+  setSelected={(id) => {
+    const selectedTL = teamleaderList.find(tl => tl.key === id);
+    setTeamleader(id);
+    setTeamleadername(selectedTL?.value || "");
+    handleTeamLeaderSelect(id);
+  }}
+  placeholder={Teamleadername || "Team Leader"}
+  search={true}
+/>
 </View>
 
 
-        <View style={styles.pickerWrapper}><SelectList data={agentList} setSelected={setAgent} placeholder="Agent" search={false} /></View>
+        <View style={styles.pickerWrapper}><SelectList
+  data={agentList}
+  setSelected={(id) => {
+    const selectedAgent = agentList.find(a => a.key === id);
+    setAgent(id);
+    setAgentName(selectedAgent?.value || "");
+  }}
+  placeholder={agentName || "Agent"}
+  search={false}
+/></View>
                         {/* lead source Dropdown */}
-                        <View style={styles.pickerWrapper}><SelectList data={leadsourcelist} setSelected={setLeadsource} placeholder="All Lead Source" search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={leadsourcelist} setSelected={setLeadsource} placeholder={leadsource} search={false} /></View>
 
                        {/* Project Dropdown */}
-                        <View style={styles.pickerWrapper}><SelectList data={projectList} setSelected={setProject} placeholder="All Project" search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={projectList} setSelected={setProject} placeholder={project} search={false} /></View>
                        {/* lead type  */}
-                        <View style={styles.pickerWrapper}><SelectList data={LeadType} setSelected={setLeadType} placeholder="Lead Status" search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={LeadType} setSelected={setLeadType} placeholder={leadType} search={false} /></View>
  {/* Date Pickers */}
     <View style={styles.datesec}>
 

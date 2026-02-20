@@ -21,9 +21,9 @@ const Setting = () => {
 
   return (
     <View style={{ padding: 20 }}>
-      <Text style={styles.label}>Office Visit Completed</Text>
+      <Text style={styles.label}>Settings</Text>
 
-      <TouchableOpacity onPress={() => setShowOfficePicker(true)} style={styles.dateButton}>
+      {/* <TouchableOpacity onPress={() => setShowOfficePicker(true)} style={styles.dateButton}>
         <Text style={[styles.dateText, !officeVisitDate && styles.placeholder]}>
           {renderDateText(officeVisitDate)}
         </Text>
@@ -36,7 +36,7 @@ const Setting = () => {
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           onChange={handleDateChange(setOfficeVisitDate, setShowOfficePicker)}
         />
-      )}
+      )} */}
     </View>
   );
 };

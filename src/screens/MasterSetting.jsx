@@ -177,7 +177,7 @@ const MasterSetting = ({ navigation }) => {
           )}
         />
       </View>
-      <View style={styles.border}>
+      <View style={[styles.border, styles.lastSection]} >
         <Text style={styles.text}>Archived Reason</Text>
         <FlatList
           data={archivedReasons}
@@ -207,7 +207,7 @@ const MasterSetting = ({ navigation }) => {
 export default MasterSetting;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f1f1f1", padding: 10 },
+  container: { flex: 1, backgroundColor: "#f1f1f1", padding: 10,marginBottom:40 },
   header: { flexDirection: "row", alignItems: "center", backgroundColor: "red", padding: 15, borderRadius: 10, marginBottom: 15 },
   backButton: { marginRight: 10 },
   headerText: { color: "white", fontSize: 14, },
@@ -237,5 +237,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     elevation: 3, backgroundColor: "#fff", padding: 5, margin: 5, borderRadius: 10,
     borderColor: "#b2b2b2"
+  },
+  lastSection:{
+    marginBottom:40
   }
 });
