@@ -120,7 +120,7 @@ useFocusEffect(
   } catch (error) {
     console.error(error);
     Alert.alert('Error', 'Network issue');
-  } finally {
+  } finally { 
     setLoading(false);
   }
 };

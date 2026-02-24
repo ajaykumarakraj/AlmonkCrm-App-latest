@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation }) => {
   const [company, setCompany] = useState("");
   const [city, setCity] = useState("");
 
-  const supportNumber = "9761407482"; 
+  const supportNumber = "+91-9761407482"; 
   const handleSignup = async () => {
     if (!name || !mobile || !email || !company || !city) {
       Alert.alert("Error", "Please fill all fields");

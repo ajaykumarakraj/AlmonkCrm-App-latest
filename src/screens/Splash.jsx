@@ -15,27 +15,23 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace("Login");
-    }, 3000); // 3 seconds
+    }, 2000); // 3 seconds
     return () => clearTimeout(timer);
   }, [navigation]);
 
   return (
-    <ImageBackground
-      source={require("../../Assets/images/login-bg.jpg")} // stylish background image
-      style={styles.background}
-      resizeMode="cover"
-    >
+  
       <View style={styles.overlay}>
         <Image 
           source={require('../../Assets/images/FUTUREKEY-HOMES-3.1.png')} 
           style={styles.logo} 
           resizeMode="contain"
         />
-        <Text style={styles.title}>Almonk Digital</Text>
+        <Text style={styles.title}>ALMONK DIGITAL</Text>
         <Text style={styles.subtitle}>CRM</Text>
-        <ActivityIndicator size="large" color="#FF6B00" style={styles.loader} />
+        <ActivityIndicator size="large" color="#003961" style={styles.loader} />
       </View>
-    </ImageBackground>
+ 
   );
 };
 
@@ -49,7 +45,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)', // semi-transparent overlay
+   // semi-transparent overlay
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -59,15 +55,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 32,
-    color: '#fff',
+    fontSize: 27,
+    color: '#003961',
     fontWeight: '800',
     textAlign: 'center',
     letterSpacing: 1,
   },
   subtitle: {
-    fontSize: 28,
-    color: '#FF6B00',
+    fontSize: 27,
+    color: '#003961',
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 30,

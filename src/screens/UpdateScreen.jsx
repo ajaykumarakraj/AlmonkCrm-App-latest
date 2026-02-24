@@ -13,8 +13,10 @@ import {
   Image,
   Linking
 } from "react-native";
+
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SelectList } from "react-native-dropdown-select-list";
 import axios from "axios";
 import ApiClient from "../component/ApiClient";
@@ -61,7 +63,7 @@ const UpdateScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const [notes, setNotes] = useState('');
 
-
+const [status, setStatus] = useState(null);
   // Notes update
   const [siteVisitDate, setSiteVisitDate] = useState(null);
   const [houseVisitDate, setHouseVisitDate] = useState(null);
@@ -262,18 +264,29 @@ const UpdateScreen = ({ route, navigation }) => {
       });
       if (res.data.status === 200) {
         setData(res.data.data);
-        // console.log("get note", res.data.data)
+        console.log("get note", res.data.data)
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-  const handleDateChange = (setter, setShow) => (event, selectedDate) => {
+const handleDateChange = (setter, setShow) => (event, selectedDate) => {
+  
+  // Android: close picker first
+  if (Platform.OS === "android") {
     setShow(false);
-    if (selectedDate) {
-      setter(selectedDate);
-    }
-  };
+  }
+
+  // 🔥 Agar cancel hua to kuch mat karo
+  if (event?.type !== "set") {
+    return;
+  }
+
+  // Sirf OK pe hi date set karo
+  if (selectedDate) {
+    setter(selectedDate);
+  }
+};
   const renderDateText = (date) => date ? date.toLocaleDateString() : 'Select date';
 
   const formattedDate = dateTime ? moment(dateTime).format('YYYY-MM-DD HH:mm:ss') : "";
@@ -423,33 +436,50 @@ const UpdateScreen = ({ route, navigation }) => {
 
   // console.log("date", dateTime)
 
-  const handleWhatsapp = async () => {
 
-    try {
+// bussiness whatsapp 
 
-      const postkey = {
-        id: userSearchdata,
-        user_id: user.user_id,
-        team_leader: teamLeaderId,
-        agent: agentid,
-        call_captured: "whatsapp"
-      }
-      // console.log("postkey", postkey)
-      const reswhatsapp = await axios.post("https://api.almonkdigital.in/api/call-capture", postkey, {
+
+
+const handleBussinessWhatsapp = async () => {
+  try {
+    const postkey = {
+      id: userSearchdata,
+      user_id: user.user_id,
+      team_leader: teamLeaderId,
+      agent: agentid,
+      call_captured: "whatsapp"
+    };
+
+    // 🔥 API CALL
+    const reswhatsapp = await axios.post(
+      "https://api.almonkdigital.in/api/call-capture",
+      postkey,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         }
-      })
-      if (reswhatsapp.status == 200) {
-
-        const url = `https://wa.me/+91${number}`;
-        Linking.openURL(url);
       }
-    } catch (error) {
-      console.log(error)
+    );
+
+    if (reswhatsapp.status === 200) {
+
+      // 🔥 Number clean karo
+      const phone = number.replace(/[^0-9]/g, "");
+
+      const message = "Hello, regarding your enquiry.";
+
+      // 🔥 Direct WhatsApp App Open
+      const url = `whatsapp://send?phone=91${phone}&text=${encodeURIComponent(message)}`;
+
+      await Linking.openURL(url);
     }
 
+  } catch (error) {
+    console.log("WhatsApp Error:", error);
+    Alert.alert("Error", "WhatsApp not installed or API failed");
   }
+};
 
   const handleCall = async () => {
     try {
@@ -469,13 +499,50 @@ const UpdateScreen = ({ route, navigation }) => {
       })
       if (reswhatsapp.status == 200) {
 
-        const url = `tel:+91${number}`;
+        const url = `tel:${number}`;
         Linking.openURL(url);
       }
     } catch (error) {
       console.log(error)
     }
   }
+
+// side compelete or not api 
+
+const completeside = () => {
+  Alert.alert(
+    "Confirm",
+    "Kya aap site visit Complete mark karna chahte hain?",
+    [
+      {
+        text: "Cancel",
+        style: "cancel"
+      },
+      {
+        text: "OK",
+        onPress: () => setStatus("complete")
+      }
+    ]
+  );
+};
+
+const notcomplete = () => {
+  Alert.alert(
+    "Confirm",
+    "Kya aap site visit Not Complete mark karna chahte hain?",
+    [
+      {
+        text: "Cancel",
+        style: "cancel"
+      },
+      {
+        text: "OK",
+        onPress: () => setStatus("notcomplete")
+      }
+    ]
+  );
+};
+//end side compelete or not api 
 
   // console.log(whatsapp)
   return (
@@ -726,15 +793,21 @@ const UpdateScreen = ({ route, navigation }) => {
             <View style={styles.social}>
               <Text style={{ fontSize: 16 }}>Enter Notes</Text>
               <View style={styles.icon}>
-                <TouchableOpacity onPress={handleWhatsapp}>
+                <TouchableOpacity onPress={handleBussinessWhatsapp}>
                   <Image
                     source={require('../../Assets/icons/whatsapp.png')}
                     style={{ width: 30, height: 30 }}
                   />
                 </TouchableOpacity>
+                {/* <TouchableOpacity onPress={handleWhatsapp}>
+                  <Image
+                    source={require('../../Assets/icons/whatsapp.png')}
+                    style={{ width: 30, height: 30 }}
+                  />
+                </TouchableOpacity> */}
                 <TouchableOpacity onPress={handleCall}>
                   <Image
-                    source={require('../../Assets/icons/telephone-call.png')}
+                    source={require('../../Assets/icons/phone-call.png')}
                     style={{ width: 30, height: 30 }}
                   />
                 </TouchableOpacity></View>
@@ -748,8 +821,47 @@ const UpdateScreen = ({ route, navigation }) => {
               value={notes}
               onChangeText={setNotes}
             />
+<View style={styles.schedule}>
+  <Text style={styles.label}>Schedule Site Visit</Text>
 
-            <Text style={styles.label}>Schedule Site Visit</Text>
+  <View style={styles.statusadd}>
+    
+    <TouchableOpacity 
+      style={[
+        styles.iconButton,
+        status === "complete" && styles.activeComplete
+      ]}
+      onPress={completeside}
+    >
+      <Icon 
+        name="check-circle" 
+        size={22} 
+        color={status === "complete" ? "green" : "green"} 
+      />
+    </TouchableOpacity>
+
+    <TouchableOpacity 
+      style={[
+        styles.iconButton,
+        status === "notcomplete" && styles.activeNotComplete
+      ]}
+      onPress={notcomplete}
+    >
+      <Icon 
+        name="cancel" 
+        size={22} 
+        color={status === "notcomplete" ? "red" : "red"} 
+      />
+    </TouchableOpacity>
+
+  </View>
+</View>
+            
+
+
+
+
+
             <TouchableOpacity onPress={() => setShowSitePicker(true)} style={styles.dateButton}>
               <Text style={[styles.dateText, !siteVisitDate && styles.placeholder]}>{renderDateText(siteVisitDate)}</Text>
             </TouchableOpacity>
@@ -1101,6 +1213,17 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 10
+  },
+  schedule:{
+    marginTop:10,
+    display:"flex",
+    flexDirection:"row",
+    gap:20
+  },
+  statusadd:{
+     gap:15,
+     display:"flex",
+    flexDirection:"row"
   }
 });
 

@@ -50,11 +50,11 @@ const Login = ({ navigation }) => {
           generatedOTP: data.otp,
         });
       } else {
-        showAlert("Error", "Failed to send OTP");
+        showAlert("Error", data.message);
       }
     } catch (error) {
       console.error(error);
-      showAlert("Error", "Something went wrong");
+      showAlert(error, "Something went wrong");
     }
   };
 const shareApp = async () => {
@@ -78,12 +78,12 @@ const handleSignUp=()=>{
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <ImageBackground
+        {/* <ImageBackground
           source={require("../../Assets/images/login-bg.jpg")}
           style={styles.background}
           resizeMode="cover"
-        >
-          <View style={styles.overlay}>
+        > */}
+          {/* <View style={styles.overlay}> */}
             <ScrollView
               contentContainerStyle={styles.scrollContainer}
               keyboardShouldPersistTaps="handled"
@@ -123,29 +123,29 @@ const handleSignUp=()=>{
                   {/* Button */}
                   <TouchableOpacity style={styles.button} onPress={sendOTP}>
                     <Icon name="paper-plane-outline" size={18} color="#fff" />
-                    <Text style={styles.buttonText}> Send OTP</Text>
+                    <Text style={styles.buttonText}>Send OTP</Text>
                   </TouchableOpacity>
               <View style={styles.box}>
                 <TouchableOpacity style={styles.shareButton} onPress={handleSignUp}>
   <Icon name="person-add-outline" size={20} color="#003961" />
-  <Text style={styles.shareText}> Sign Up</Text>
+  <Text style={styles.shareText}>Sign Up</Text>
 </TouchableOpacity>
 <TouchableOpacity style={styles.shareButton} onPress={shareApp}>
   <Icon name="share-social-outline" size={18} color="#003961" />
-  <Text style={styles.shareText}> Share App</Text>
+  <Text style={styles.shareText}>Share App</Text>
 </TouchableOpacity>
               </View>
                 </View>
 
                 {/* Brand */}
                 <View style={styles.brandContainer}>
-                  <Text style={styles.brandMain}>Almonk Digital</Text>
-                  <Text style={styles.brandSub}>CRM</Text>
+                  <Text style={styles.brandMain}>Almonk Digital CRM</Text>
+                  {/* <Text style={styles.brandSub}></Text> */}
                 </View>
               </View>
             </ScrollView>
-          </View>
-        </ImageBackground>
+          {/* </View> */}
+        {/* </ImageBackground> */}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -156,11 +156,11 @@ export default Login;
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   background: { flex: 1, width: "100%", height: "100%" },
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.3)",
-    justifyContent: "center",
-  },
+  // overlay: {
+  //   flex: 1,
+  //   backgroundColor: "rgba(158, 19, 19, 0.3)",
+  //   justifyContent: "center",
+  // },
   scrollContainer: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 25 },
   container: { flex: 1, justifyContent: "center" },
   logo: { width: width * 0.6, height: 180, alignSelf: "center", marginBottom: 30 },
@@ -222,11 +222,11 @@ shareText: {
 box:{
   display:"flex",
   flexDirection:"row",
-  gap:10,
+ 
   justifyContent:"space-evenly"
 },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
   brandContainer: { alignItems: "center", marginBottom: 20, marginTop: 40 },
-  brandMain: { fontSize: 34, fontWeight: "800", color: "#003961", letterSpacing: 1 },
+  brandMain: { fontSize: 20, fontWeight: "800", color: "#003961", letterSpacing: 1,textTransform:"uppercase" },
   brandSub: { fontSize: 34, fontWeight: "600", color: "#af5a1e", letterSpacing: 3 },
 });

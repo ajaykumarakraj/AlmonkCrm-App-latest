@@ -131,11 +131,11 @@ const OTPScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ImageBackground
+      {/* <ImageBackground
         source={require('../../Assets/images/login-bg.jpg')}
         style={styles.background}
         resizeMode="cover"
-      >
+      > */}
         <View style={styles.overlay}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -184,14 +184,14 @@ const OTPScreen = () => {
                 </View>
 
                 <View style={styles.brandContainer}>
-                  <Text style={styles.brandMain}>Almonk Digital</Text>
-                  <Text style={styles.brandSub}>CRM</Text>
+                  <Text style={styles.brandMain}>ALMONK DIGITAL CRM</Text>
+                  {/* <Text style={styles.brandSub}>CRM</Text> */}
                 </View>
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
         </View>
-      </ImageBackground>
+      {/* </ImageBackground> */}
     </TouchableWithoutFeedback>
   );
 };
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    // backgroundColor: 'rgba(0,0,0,0.3)',
     justifyContent: 'center',
   },
   scrollContainer: {
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   brandMain: {
-    fontSize: 34,
+    fontSize: 20,
     fontWeight: '800',
     color: '#003961',
     letterSpacing: 1,
