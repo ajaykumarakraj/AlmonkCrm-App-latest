@@ -118,9 +118,9 @@ const FilterHomeScreen = ({ navigation ,route}) => {
 
         <View style={styles.row}>
           {user?.role === "Admin" && (
-            <LeadBox title="Fresh Leads" count={data.fresh_lead} icon={require('../../Assets/icons/user-engagement.png')} onPress={() => goToTable('fresh_lead')} />
+            <LeadBox title="Fresh Leads" count={data.fresh_lead} icon={require('../../Assets/icons/Freshlead.png')} onPress={() => goToTable('fresh_lead')} />
           )}
-          <LeadBox title="New Leads" count={data.new_lead} icon={require('../../Assets/icons/user-engagement.png')} onPress={() => goToTable('new_lead')} />
+          <LeadBox title="New Leads" count={data.new_lead} icon={require('../../Assets/icons/Newlead.png')} onPress={() => goToTable('new_lead')} />
         </View>
 
         <View style={styles.row}>
@@ -143,9 +143,13 @@ const FilterHomeScreen = ({ navigation ,route}) => {
           <LeadBox title="Archived Leads" count={data.archived_lead} icon={require('../../Assets/icons/location.png')} onPress={() => goToTable('archived_lead')} />
         </View>
         <View style={styles.row}>
-        <LeadBox title="Reassign" count={data.re_assign} icon={require('../../Assets/icons/rotation.png')} onPress={() => goToTable('re_assign')} />
-        <LeadBox title="Converted" count={data.converted} icon={require('../../Assets/icons/users.png')} onPress={() => goToTable('converted')} />
+        <LeadBox title="Reassign" count={data.re_assign} icon={require('../../Assets/icons/Reassign.png')} onPress={() => goToTable('re_assign')} />
+        <LeadBox title="Converted" count={data.converted} icon={require('../../Assets/icons/Converted.png')} onPress={() => goToTable('converted')} />
         </View>
+         <View style={styles.row}>
+              
+                <LeadBox title="Complete Side Visit" count={data.completed_site_visit} icon={require('../../Assets/icons/Completesitevisit.png')} onPress={() => goToTable('completed_site_visit')} />
+                </View>
       </View>
     </ScrollView>
   );

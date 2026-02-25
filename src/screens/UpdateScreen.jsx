@@ -68,11 +68,11 @@ const [status, setStatus] = useState(null);
   const [siteVisitDate, setSiteVisitDate] = useState(null);
   const [houseVisitDate, setHouseVisitDate] = useState(null);
   const [officeVisitDate, setOfficeVisitDate] = useState(null);
-  const [midwayVisitDate, setMidwayVisitDate] = useState(null);
+  // const [midwayVisitDate, setMidwayVisitDate] = useState(null);
   const [showSitePicker, setShowSitePicker] = useState(false);
   const [showHousePicker, setShowHousePicker] = useState(false);
   const [showOfficePicker, setShowOfficePicker] = useState(false);
-  const [showMidwayPicker, setShowMidwayPicker] = useState(false);
+  // const [showMidwayPicker, setShowMidwayPicker] = useState(false);
 
 
   const [isPickerVisible, setPickerVisible] = useState(false);
@@ -322,7 +322,7 @@ const handleDateChange = (setter, setShow) => (event, selectedDate) => {
         site_visit: siteVisitDate,
         house_visit: houseVisitDate,
         office_visit: officeVisitDate,
-        mid_way_visit: midwayVisitDate,
+        // mid_way_visit: midwayVisitDate,
         call_status: call,
         follow_up: formattedDate,
         last_call_action: callAction,
@@ -520,7 +520,39 @@ const completeside = () => {
       },
       {
         text: "OK",
-        onPress: () => setStatus("complete")
+        onPress: async () => {
+          try {
+            setLoading(true);
+
+            const res = await api.post(
+              "/update-site-visit",   
+              {
+                id: item.id,            
+                status: "complete"
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+              }
+            );
+
+            if (res.status === 200) {
+              Alert.alert("Success", "Site visit marked as complete");
+              
+              // agar state update karni ho
+              setStatus("complete");
+
+              // agar data refresh karna ho
+              // getsearchdata(currentPage);
+            }
+
+          } catch (error) {
+            Alert.alert("Error", "Something went wrong");
+          } finally {
+            setLoading(false);
+          }
+        }
       }
     ]
   );
@@ -564,14 +596,14 @@ const notcomplete = () => {
 
               title="Customer"
               onPress={() => setFormMode("customer")}
-              color={formMode === "customer" ? "#003961" : "#841584"}
+              color={formMode === "customer" ? "#003961" : "#888"}
             />
           </View>
           <View style={{ width: "50%" }}>
             <Button
               title="Notes"
               onPress={() => setFormMode("notes")}
-              color={formMode === "notes" ? "#003961" : "#841584"}
+              color={formMode === "notes" ? "#003961" : "#888"}
             />
           </View>
         </View>
@@ -900,7 +932,7 @@ const notcomplete = () => {
               />
             )}
 
-            <Text style={styles.label}>Mid Way Visit Completed</Text>
+            {/* <Text style={styles.label}>Mid Way Visit Completed</Text>
             <TouchableOpacity onPress={() => setShowMidwayPicker(true)} style={styles.dateButton}>
               <Text style={[styles.dateText, !midwayVisitDate && styles.placeholder]}>{renderDateText(midwayVisitDate)}</Text>
             </TouchableOpacity>
@@ -911,7 +943,7 @@ const notcomplete = () => {
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={handleDateChange(setMidwayVisitDate, setShowMidwayPicker)}
               />
-            )}
+            )} */}
 
             <Text style={styles.label}>Call Status</Text>
             <View style={styles.pickerWrapper}>

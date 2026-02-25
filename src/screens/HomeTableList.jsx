@@ -37,7 +37,7 @@ const mapLeadTypeToStatus = (type) => {
     case 'tomorrow_site_visit': return 9;
     case 'scheduled_site_visit': return 10;
     case 're_assign': return 11;
-
+     case 'completed_site_visit': return 12;
     default: return 0;
   }
 };
@@ -93,7 +93,7 @@ useFocusEffect(
   // Fetch lead data from API
  const leadData = async (pageNumber = 1) => {
   setLoading(true);
-
+console.log(leadStatus, user.user_id)
   try {
     const res = await ApiClient.post(
       `/get-lead-data?page=${pageNumber}`,
@@ -107,7 +107,7 @@ useFocusEffect(
         },
       }
     );
-
+console.log(res.data)
     if (res.data.status === 200) {
       setData(res.data.data);
       setPage(res.data.meta.current_page);

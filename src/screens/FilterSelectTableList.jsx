@@ -37,7 +37,7 @@ const mapLeadTypeToStatus = (type) => {
     case 'tomorrow_site_visit': return 9;
     case 'scheduled_site_visit': return 10;
     case 're_assign': return 11;
-
+ case 'completed_site_visit': return 12;
     default: return 0;
   }
 };

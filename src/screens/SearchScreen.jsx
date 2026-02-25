@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useLayoutEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ApiClient from '../component/ApiClient';
+
 const SearchScreen = ({ navigation }) => {
   const { user, token } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,14 +35,14 @@ const SearchScreen = ({ navigation }) => {
 
     try {
 
-      // console.log('Searching for:', searchQuery);
+      console.log('Searching for:', searchQuery);
       const res = await ApiClient.post("/search", { user_id: `${user.user_id}`, search_value: searchQuery }, {
         headers: {
           Authorization: `Bearer ${token}`,
         }
       })
       setResult(res.data)
-      // console.log("id", user.user_id)
+      console.log("res.dataid", res.data)
     } catch (error) {
       console.error("Search error:", error);
       Alert.alert("Error", "Something went wrong during search.");
@@ -55,19 +56,20 @@ const SearchScreen = ({ navigation }) => {
       <Text style={styles.cell}>{item.name}</Text>
       <Text style={styles.cell}>{item.contact}</Text>
       <TouchableOpacity
-
-        disabled={!item.enable_edit}
-        onPress={() => {
-          if (item.enable_edit) {
-            navigation.navigate('UpdateScreen', { userSearchdata: item.id })
-          }
-        }}
-
-      >
-        <Text style={styles.cell}>
-          {item.enable_edit ? <Image source={require("../../Assets/icons/write.png")} style={{ height: 20, width: 20 }} /> : <Image source={require("../../Assets/icons/edit.png")} style={{ height: 20, width: 20 }} />}
-        </Text>
-      </TouchableOpacity>
+  disabled={!(item.enable_edit === true || user?.role === "Admin")}
+  onPress={() => {
+    if (item.enable_edit === true || user?.role === "Admin") {
+      navigation.navigate('UpdateScreen', { userSearchdata: item.id })
+    }
+  }}
+>
+  <Text style={styles.cell}>
+    {(item.enable_edit === true || user?.role === "Admin")
+      ? <Image source={require("../../Assets/icons/write.png")} style={{ height: 20, width: 20 }} />
+      : <Image source={require("../../Assets/icons/edit.png")} style={{ height: 20, width: 20 }} />
+    }
+  </Text>
+</TouchableOpacity>
     </View>
   )
   return (

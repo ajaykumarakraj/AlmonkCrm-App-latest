@@ -24,16 +24,13 @@ import ApiClient from '../component/ApiClient';
 
 // Function defined before usage
 const mapLeadTypeToStatus = (type) => {
-  switch (type) {
-   
+  switch (type) {   
     case 'New Lead': return 1;
     case 'InProcess Lead': return 2;
     case 'Hot Lead': return 3;
     case 'Archived Lead': return 4;
-    case 'Converted Lead': return 5;
-   
+    case 'Converted Lead': return 5;   
     case 'Reassign Lead': return 11;
-
     default: return "all";
   }
 };

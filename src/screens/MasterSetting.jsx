@@ -208,7 +208,7 @@ export default MasterSetting;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f1f1f1", padding: 10,marginBottom:40 },
-  header: { flexDirection: "row", alignItems: "center", backgroundColor: "red", padding: 15, borderRadius: 10, marginBottom: 15 },
+  header: { flexDirection: "row", alignItems: "center", backgroundColor: "#003961", padding: 15, borderRadius: 10, marginBottom: 15 },
   backButton: { marginRight: 10 },
   headerText: { color: "white", fontSize: 14, },
   tableRow: { flexDirection: "row", elevation: 3, backgroundColor: "#fff", padding: 5, margin: 5, borderRadius: 10, justifyContent: "space-around" },
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   icon: { marginLeft: 10 },
   actionButtons: { flexDirection: "row", justifyContent: "space-between", marginTop: 0 },
   updateButton: { flexDirection: "row", alignItems: "center", backgroundColor: "green", padding: 3, borderRadius: 5, marginRight: 6 },
-  deleteButton: { flexDirection: "row", alignItems: "center", backgroundColor: "red", padding: 3, borderRadius: 5 },
+  deleteButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#003961", padding: 3, borderRadius: 5 },
   updateText: { color: "white", marginLeft: 5, fontWeight: "bold" },
   deleteText: { color: "white", marginLeft: 5, fontWeight: "bold" },
   pagination: { flexDirection: "row", justifyContent: "space-between", marginTop: 20 },

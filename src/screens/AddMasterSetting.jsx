@@ -47,7 +47,7 @@ const AddMasterSetting = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Add AddMasterSetting</Text>
+        <Text style={styles.headerText}>Add MasterSetting</Text>
       </View>
       {/* Agent data (without search) */}
       <View style={styles.pickerWrapper}>
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "red",
+    backgroundColor: "#003961",
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden', // Ensures no parts of the picker go outside the container
   },
   button: {
-    backgroundColor: "red",
+    backgroundColor: "#003961",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",

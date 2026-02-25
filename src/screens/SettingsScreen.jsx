@@ -32,18 +32,18 @@ const SettingsScreen = ({ navigation }) => {
           <View>
             <View style={styles.row}>
               <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('UserManagement')}>
-                <Image source={require('../../Assets/icons/management.png')} style={{ width: 35, height: 35 }} />
+                <Image source={require('../../Assets/icons/usermanagement.png')} style={{ width: 35, height: 35 }} />
                 <Text style={styles.boxText}>User Management</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('MasterSetting')}>
-                <Image source={require('../../Assets/icons/process.png')} style={{ width: 35, height: 35 }} />
+                <Image source={require('../../Assets/icons/Mastersetting.png')} style={{ width: 35, height: 35 }} />
                 <Text style={styles.boxText}>Master Setting</Text>
               </TouchableOpacity>
             </View>
 
             <View style={styles.row}>
               <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Table')}>
-                <Image source={require('../../Assets/icons/view.png')} style={{ width: 35, height: 35 }} />
+                <Image source={require('../../Assets/icons/allleads.png')} style={{ width: 35, height: 35 }} />
                 <Text style={styles.boxText}>View All Leads</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('ShareScreen')}>
