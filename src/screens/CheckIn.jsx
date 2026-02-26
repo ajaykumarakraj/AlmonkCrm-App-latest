@@ -57,7 +57,7 @@ const CheckIn = () => {
       );
     });
   };
-
+console.log(user?.user_id,"check id" )
   const getvalue = async (coords, type) => {
     if (!coords) {
       Alert.alert('Error', 'Location data is not available.');
@@ -66,7 +66,7 @@ const CheckIn = () => {
     try {
       const res = await ApiClient.post('/check-in', {
         type,
-        user_id: user?.id || '1',
+        user_id: user?.user_id , 
         latitude: coords.latitude,
         longitude: coords.longitude,
       }, {

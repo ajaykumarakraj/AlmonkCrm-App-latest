@@ -93,7 +93,7 @@ const HomeScreen = ({ navigation }) => {
 
         <View style={styles.row}>
           <LeadBox title="In Process Leads" count={data.in_process} icon={require('../../Assets/icons/progress.png')} onPress={() => goToTable('in_process')} />
- <LeadBox title="Complete Side Visit" count={data.completed_site_visit} icon={require('../../Assets/icons/Completesitevisit.png')} onPress={() => goToTable('completed_site_visit')} />
+ <LeadBox title="Complete Site Visit" count={data.completed_site_visit} icon={require('../../Assets/icons/Completesitevisit.png')} onPress={() => goToTable('completed_site_visit')} />
              
         </View>
         <View style={styles.row}>

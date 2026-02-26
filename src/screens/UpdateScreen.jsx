@@ -13,7 +13,7 @@ import {
   Image,
   Linking
 } from "react-native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -66,12 +66,12 @@ const UpdateScreen = ({ route, navigation }) => {
 const [status, setStatus] = useState(null);
   // Notes update
   const [siteVisitDate, setSiteVisitDate] = useState(null);
-  const [houseVisitDate, setHouseVisitDate] = useState(null);
-  const [officeVisitDate, setOfficeVisitDate] = useState(null);
+  // const [houseVisitDate, setHouseVisitDate] = useState(null);
+  // const [officeVisitDate, setOfficeVisitDate] = useState(null);
   // const [midwayVisitDate, setMidwayVisitDate] = useState(null);
   const [showSitePicker, setShowSitePicker] = useState(false);
-  const [showHousePicker, setShowHousePicker] = useState(false);
-  const [showOfficePicker, setShowOfficePicker] = useState(false);
+  // const [showHousePicker, setShowHousePicker] = useState(false);
+  // const [showOfficePicker, setShowOfficePicker] = useState(false);
   // const [showMidwayPicker, setShowMidwayPicker] = useState(false);
 
 
@@ -88,11 +88,21 @@ const [status, setStatus] = useState(null);
   // call action 
   const [Callstatus, setCallStatus] = useState("");
   const [callAction, setCallAction] = useState("");
+//visit status
+const [VisitStatus,setVisitStatus]=useState("")
+
+// show visit status 
+const [VisitDate,setVisitDate]=useState("")
+const [HouseDate,setHouseDate]=useState("")
+const [OfficeDate,setOfficeDate]=useState("")
+
+console.log(VisitDate)
+
 
   // const [date, setDate] = useState(new Date());
   // const [mode, setMode] = useState('date'); // 'date' or 'time'
   // const [show, setShow] = useState(false);
-
+// console.log(siteVisitDate.toDateString(),"siteVisitDate")
   // Dropdown Data   
   const genderData = [
     { key: "1", value: "Male" },
@@ -104,7 +114,11 @@ const [status, setStatus] = useState(null);
     { key: "2", value: "Customer" },
   ];
 
-
+const visitstatus=[
+   {key: "schedule_site_visit",  value: "Schedule Site Visit" },
+    {key: "office_visit",  value: "Office Visit" },
+     {key: "house_visit",  value: "House Visit" },
+]
   const callstatus = [
     { value: "Connect" },
     { value: "Not Connect" },
@@ -136,6 +150,8 @@ const [status, setStatus] = useState(null);
     'Incoming Unavailable',
     'Other',
   ];
+
+  
   const onRefresh = () => {
     setRefreshing(true);
     // numData(); // ✅ fixed
@@ -150,6 +166,10 @@ const [status, setStatus] = useState(null);
     setCallStatus(selectedValue);
     setCallAction(''); // reset dependent field
     // setFollowUpDate(''); // if needed
+  };
+   const handleVisitStatus = (selectedValue) => {
+    setVisitStatus(selectedValue);
+ 
   };
   const showPicker = () => setPickerVisible(true);
   const hidePicker = () => setPickerVisible(false);
@@ -229,7 +249,7 @@ const [status, setStatus] = useState(null);
 
         const fetchedUser = res.data.data;
         // console.log("run")
-        // console.log("all data", fetchedUser)
+        console.log("all data", fetchedUser)
         setName(fetchedUser.name)
         setNumber(fetchedUser.contact)
         setSelectedGender(fetchedUser.gender)
@@ -246,10 +266,23 @@ const [status, setStatus] = useState(null);
         setProject(fetchedUser.project_id)
         setTeamLeader(res.data.tl_name)
         setGetAgent(res.data.agent_name)
-        // setAgentList(res.data.agent_data.map((v) => ({ key: v.agent_id, value: v.agent_name })))
-
-
-        // setAgentId(res.data.agent_data.agent_id)
+        setVisitStatus(fetchedUser.visit_status)
+       if (fetchedUser.visit_status === "Schedule Site Visit") {
+  if (fetchedUser.current_site_visit) {
+    setSiteVisitDate(new Date(fetchedUser.current_site_visit));
+  }
+} 
+else if (fetchedUser.visit_status === "Office Visit") {
+  if (fetchedUser.current_office_visit) {
+    setSiteVisitDate(new Date(fetchedUser.current_office_visit));
+  }
+} 
+else if (fetchedUser.visit_status === "House Visit") {
+  if (fetchedUser.current_house_visit) {
+    setSiteVisitDate(new Date(fetchedUser.current_house_visit));
+  }
+}
+          
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -287,7 +320,14 @@ const handleDateChange = (setter, setShow) => (event, selectedDate) => {
     setter(selectedDate);
   }
 };
-  const renderDateText = (date) => date ? date.toLocaleDateString() : 'Select date';
+const renderDateText = (date) =>
+  date
+    ? date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+    : "Select Date";
 
   const formattedDate = dateTime ? moment(dateTime).format('YYYY-MM-DD HH:mm:ss') : "";
   const handleSaveNote = async () => {
@@ -319,9 +359,10 @@ const handleDateChange = (setter, setShow) => (event, selectedDate) => {
         user_id: user.user_id,
         id: userSearchdata,
         notes: notes,
+        site_status:VisitStatus,
         site_visit: siteVisitDate,
-        house_visit: houseVisitDate,
-        office_visit: officeVisitDate,
+        // house_visit: houseVisitDate,
+        // office_visit: officeVisitDate,
         // mid_way_visit: midwayVisitDate,
         call_status: call,
         follow_up: formattedDate,
@@ -332,7 +373,7 @@ const handleDateChange = (setter, setShow) => (event, selectedDate) => {
         agent: agentid
 
       };
-      // console.log("notes data", updatedUser)
+      console.log("notes data", updatedUser)
       const res = await ApiClient.post(
         "/save-lead-notes",
         updatedUser,
@@ -470,7 +511,7 @@ const handleBussinessWhatsapp = async () => {
       const message = "Hello, regarding your enquiry.";
 
       // 🔥 Direct WhatsApp App Open
-      const url = `whatsapp://send?phone=91${phone}&text=${encodeURIComponent(message)}`;
+      const url = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(message)}`;
 
       await Linking.openURL(url);
     }
@@ -508,11 +549,11 @@ const handleBussinessWhatsapp = async () => {
   }
 
 // side compelete or not api 
-
+// console.log(userSearchdata)
 const completeside = () => {
   Alert.alert(
     "Confirm",
-    "Kya aap site visit Complete mark karna chahte hain?",
+    "Are you sure to complete?",
     [
       {
         text: "Cancel",
@@ -523,32 +564,34 @@ const completeside = () => {
         onPress: async () => {
           try {
             setLoading(true);
+            console.log("ID:", userSearchdata,token);
 
-            const res = await api.post(
-              "/update-site-visit",   
+            const res = await ApiClient.post(
+              "/update-site-visit",
               {
-                id: item.id,            
-                status: "complete"
+                id: userSearchdata,
+                site_status: 1
               },
               {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
               }
             );
 
-            if (res.status === 200) {
-              Alert.alert("Success", "Site visit marked as complete");
-              
-              // agar state update karni ho
-              setStatus("complete");
+            console.log("Success Response:", res.data);
 
-              // agar data refresh karna ho
-              // getsearchdata(currentPage);
-            }
+            Alert.alert("Success", "Site visit completed");
+            setStatus("complete");
 
           } catch (error) {
-            Alert.alert("Error", "Something went wrong");
+            console.log("Full Error:", error);
+            console.log("Response Error:", error?.response?.data);
+
+            Alert.alert(
+              "Error",
+              error?.response?.data?.message ||
+              error?.message ||
+              "Something went wrong"
+            );
           } finally {
             setLoading(false);
           }
@@ -561,7 +604,7 @@ const completeside = () => {
 const notcomplete = () => {
   Alert.alert(
     "Confirm",
-    "Kya aap site visit Not Complete mark karna chahte hain?",
+    "Are you sure to remove?",
     [
       {
         text: "Cancel",
@@ -569,14 +612,72 @@ const notcomplete = () => {
       },
       {
         text: "OK",
-        onPress: () => setStatus("notcomplete")
+        onPress: async () => {
+          try {
+            setLoading(true);
+            console.log("ID:", userSearchdata,token);
+
+            const res = await ApiClient.post(
+              "/update-site-visit",
+              {
+                id: userSearchdata,
+                site_status: 2
+              },
+              {
+                headers: { Authorization: `Bearer ${token}` }
+              }
+            );
+
+            console.log("Success Response:", res.data);
+
+            Alert.alert("Success", "Site visit removed");
+            setStatus("notcomplete");
+
+          } catch (error) {
+            console.log("Full Error:", error);
+            console.log("Response Error:", error?.response?.data);
+
+            Alert.alert(
+              "Error",
+              error?.response?.data?.message ||
+              error?.message ||
+              "Something went wrong"
+            );
+          } finally {
+            setLoading(false);
+          }
+        }
       }
     ]
   );
 };
+
+
+
+console.log(VisitStatus,"VisitStatus")
 //end side compelete or not api 
 
-  // console.log(whatsapp)
+// show date in visit site 
+
+// useEffect(() => {
+//   if (!VisitStatus) return;
+
+//   let selectedDate = null;
+
+//   if (VisitStatus === "Schedule Site Visit" && VisitDate && VisitDate !== "1970-01-01") {
+//     selectedDate = new Date(VisitDate);
+//   } else if (VisitStatus === "Office Visit" && OfficeDate && OfficeDate !== "1970-01-01") {
+//     selectedDate = new Date(OfficeDate);
+//   } else if (VisitStatus === "House Visit" && HouseDate && HouseDate !== "1970-01-01") {
+//     selectedDate = new Date(HouseDate);
+//   }
+
+//   setSiteVisitDate(selectedDate);
+// }, [VisitStatus, VisitDate, OfficeDate, HouseDate]);
+
+
+
+  console.log(siteVisitDate,"siteVisitDate")
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View style={styles.container}>
@@ -854,7 +955,7 @@ const notcomplete = () => {
               onChangeText={setNotes}
             />
 <View style={styles.schedule}>
-  <Text style={styles.label}>Schedule Site Visit</Text>
+  <Text style={styles.label}>Visit Status</Text>
 
   <View style={styles.statusadd}>
     
@@ -888,25 +989,51 @@ const notcomplete = () => {
 
   </View>
 </View>
-            
 
-
-
-
-
-            <TouchableOpacity onPress={() => setShowSitePicker(true)} style={styles.dateButton}>
-              <Text style={[styles.dateText, !siteVisitDate && styles.placeholder]}>{renderDateText(siteVisitDate)}</Text>
-            </TouchableOpacity>
-            {showSitePicker && (
-              <DateTimePicker
-                value={siteVisitDate || new Date()}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={handleDateChange(setSiteVisitDate, setShowSitePicker)}
+<View>
+  
+</View>
+            <View   style={styles.visit}>
+<SelectList 
+                data={visitstatus}
+                setSelected={handleVisitStatus}
+                placeholder={VisitStatus ||"Select Visit Status"}
+                save="key"
+                
+                search={false}
+                defaultValue={VisitStatus}
               />
-            )}
+</View>
 
-            <Text style={styles.label}>House Visit Completed</Text>
+{VisitStatus && (
+  <View>
+    <TouchableOpacity
+      onPress={() => setShowSitePicker(true)}
+      style={styles.dateButton}
+    >
+      <Text
+        style={[
+          styles.dateText,
+          !siteVisitDate && styles.placeholder
+        ]}
+      >
+        {renderDateText(siteVisitDate)}
+      </Text>
+    </TouchableOpacity>
+
+    {showSitePicker && (
+      <DateTimePicker
+        value={siteVisitDate || new Date()}
+        mode="date"
+        display={Platform.OS === "ios" ? "spinner" : "default"}
+        onChange={handleDateChange(setSiteVisitDate, setShowSitePicker)}
+      />
+    )}
+  </View>
+)}
+  
+
+            {/* <Text style={styles.label}>House Visit Completed</Text>
             <TouchableOpacity onPress={() => setShowHousePicker(true)} style={styles.dateButton}>
               <Text style={[styles.dateText, !houseVisitDate && styles.placeholder]}>{renderDateText(houseVisitDate)}</Text>
             </TouchableOpacity>
@@ -917,9 +1044,9 @@ const notcomplete = () => {
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={handleDateChange(setHouseVisitDate, setShowHousePicker)}
               />
-            )}
+            )} */}
 
-            <Text style={styles.label}>Office Visit Completed</Text>
+            {/* <Text style={styles.label}>Office Visit Completed</Text>
             <TouchableOpacity onPress={() => setShowOfficePicker(true)} style={styles.dateButton}>
               <Text style={[styles.dateText, !officeVisitDate && styles.placeholder]}>{renderDateText(officeVisitDate)}</Text>
             </TouchableOpacity>
@@ -930,7 +1057,7 @@ const notcomplete = () => {
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={handleDateChange(setOfficeVisitDate, setShowOfficePicker)}
               />
-            )}
+            )} */}
 
             {/* <Text style={styles.label}>Mid Way Visit Completed</Text>
             <TouchableOpacity onPress={() => setShowMidwayPicker(true)} style={styles.dateButton}>
@@ -953,7 +1080,7 @@ const notcomplete = () => {
                 placeholder="Select Call Status"
                 save="value"
                 search={false}
-                defaultValue={call}
+                // defaultValue={call}
               />
             </View>
             {error && (
@@ -1102,6 +1229,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
+    paddingTop:10,
     // marginBottom: 10,
     marginTop: 15,
     marginLeft: 10
@@ -1209,7 +1337,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    marginBottom: 4,
+    // marginBottom: 4,
+    marginTop:10,
     color: '#333',
   },
   bold: {
@@ -1256,6 +1385,10 @@ const styles = StyleSheet.create({
      gap:15,
      display:"flex",
     flexDirection:"row"
+  },
+  visit:{
+    marginBottom:10,
+    // padding:10
   }
 });
 

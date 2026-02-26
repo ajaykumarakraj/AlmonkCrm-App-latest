@@ -19,40 +19,44 @@ import ApiClient from "../component/ApiClient";
 
 const SignupScreen = ({ navigation }) => {
   const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [phone, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [city, setCity] = useState("");
 
-  const supportNumber = "+91-9761407482"; 
+  const supportNumber = "9266307700"; 
   const handleSignup = async () => {
-    if (!name || !mobile || !email || !company || !city) {
+    console.log("run")
+    if (!name || !phone || !email || !company || !city) {
       Alert.alert("Error", "Please fill all fields");
       return;
     }
 
-    if (mobile.length !== 10) {
+    if (phone.length !== 10) {
       Alert.alert("Error", "Enter valid 10 digit mobile number");
       return;
     }
-
+const payload={ 
+       name:name,
+        phone:phone,
+        email:email,
+        company:company,
+        city:city,
+      }
+        console.log(payload)
     try {
-      const response = await ApiClient.post("/register", {
-        name,
-        mobile,
-        email,
-        company,
-        city,
-      });
+      const response = await ApiClient.post("/sign-up", payload);
 
       if (response.data.status === 200) {
-        Alert.alert("Success", "Account Created Successfully");
+        console.log(response)
+        console.log(response.data.message)
+        Alert.alert("Success", response.data.message);
         navigation.navigate("Login");
       } else {
-        Alert.alert("Error", "Registration failed");
+        Alert.alert("Error", response.data.message);
       }
     } catch (error) {
-      Alert.alert("Error", "Something went wrong");
+      Alert.alert("Error", error);
     }
   };
 
@@ -94,7 +98,7 @@ const SignupScreen = ({ navigation }) => {
               placeholder="Mobile Number"
               keyboardType="number-pad"
               maxLength={10}
-              value={mobile}
+              value={phone}
               onChangeText={(text) =>
                 setMobile(text.replace(/[^0-9]/g, ""))
               }

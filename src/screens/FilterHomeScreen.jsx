@@ -148,7 +148,7 @@ const FilterHomeScreen = ({ navigation ,route}) => {
         </View>
          <View style={styles.row}>
               
-                <LeadBox title="Complete Side Visit" count={data.completed_site_visit} icon={require('../../Assets/icons/Completesitevisit.png')} onPress={() => goToTable('completed_site_visit')} />
+                <LeadBox title="Complete Site Visit" count={data.completed_site_visit} icon={require('../../Assets/icons/Completesitevisit.png')} onPress={() => goToTable('completed_site_visit')} />
                 </View>
       </View>
     </ScrollView>
