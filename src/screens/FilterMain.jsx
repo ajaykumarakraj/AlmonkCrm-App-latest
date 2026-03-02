@@ -27,7 +27,7 @@ const [agentName, setAgentName] = useState("");
     const [leadsourcelist,setLeadsourceList]=useState([])
     const [leadsource,setLeadsource]=useState("")
 
-    const [leadType,setLeadType]=useState([])
+    const [leadType,setLeadType]=useState("")
     const [projectList,setProjectList]=useState([])
     const [project,setProject]=useState("")
 // console.log(teamleaderList,Teamleadername)
@@ -107,9 +107,10 @@ const handlSubmit = async () => {
     currentForm
   };
 
-  await AsyncStorage.setItem('FILTER_DATA', JSON.stringify(filterData));
-
+  // await AsyncStorage.setItem('FILTER_DATA', JSON.stringify(filterData));
+await AsyncStorage.removeItem('FILTER_DATA');
   navigation.navigate('filtertable', filterData);
+  console.log(filterData)
 };
 
 
@@ -222,7 +223,7 @@ const fetchRequirements = async () => {
 
 // console.log(user.role)
 // console.log(user.name)
-// console.log(user)
+// console.log(Teamleadername,"leadType")
     const renderForm = () => {
         switch (currentForm) {
             case "lead":
@@ -231,12 +232,12 @@ const fetchRequirements = async () => {
                         {/* <Text style={styles.title}>Form 1 - Basic</Text> */}
 
                         {/* lead source Dropdown */}
-                        <View style={styles.pickerWrapper}><SelectList data={leadsourcelist} setSelected={setLeadsource} placeholder={leadsource} search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={leadsourcelist} setSelected={setLeadsource} placeholder={leadsource||"Select Lead Source"} search={false} /></View>
 
                        {/* Project Dropdown */}
-                        <View style={styles.pickerWrapper}><SelectList data={projectList} setSelected={setProject} placeholder={project} search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={projectList} setSelected={setProject} placeholder={project||"Select Project"} search={false} /></View>
                        {/* lead type  */}
-                        <View style={styles.pickerWrapper}><SelectList data={LeadType} setSelected={setLeadType} placeholder={leadType} search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={LeadType} setSelected={setLeadType} placeholder={leadType||"Select Lead Status"} search={false} /></View>
  {/* Date Pickers */}
     <View style={styles.datesec}>
 
@@ -306,7 +307,7 @@ const fetchRequirements = async () => {
     setTeamleadername(selectedTL?.value || "");
     handleTeamLeaderSelect(id);
   }}
-  placeholder={Teamleadername || "Team Leader"}
+  placeholder={user.name||Teamleadername || "Team Leader"}
   search={true}
 />
 </View>
@@ -323,12 +324,12 @@ const fetchRequirements = async () => {
   search={false}
 /></View>
                         {/* lead source Dropdown */}
-                        <View style={styles.pickerWrapper}><SelectList data={leadsourcelist} setSelected={setLeadsource} placeholder={leadsource} search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={leadsourcelist} setSelected={setLeadsource} placeholder={leadsource||"Select Lead Source"} search={false} /></View>
 
                        {/* Project Dropdown */}
-                        <View style={styles.pickerWrapper}><SelectList data={projectList} setSelected={setProject} placeholder={project} search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={projectList} setSelected={setProject} placeholder={project||"Select Project"} search={false} /></View>
                        {/* lead type  */}
-                        <View style={styles.pickerWrapper}><SelectList data={LeadType} setSelected={setLeadType} placeholder={leadType} search={false} /></View>
+                        <View style={styles.pickerWrapper}><SelectList data={LeadType} setSelected={setLeadType} placeholder={leadType||"Select Lead Status"} search={false} /></View>
  {/* Date Pickers */}
     <View style={styles.datesec}>
 

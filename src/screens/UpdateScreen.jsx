@@ -96,7 +96,7 @@ const [VisitDate,setVisitDate]=useState("")
 const [HouseDate,setHouseDate]=useState("")
 const [OfficeDate,setOfficeDate]=useState("")
 
-console.log(VisitDate)
+// console.log(VisitDate)
 
 
   // const [date, setDate] = useState(new Date());
@@ -249,7 +249,7 @@ const visitstatus=[
 
         const fetchedUser = res.data.data;
         // console.log("run")
-        console.log("all data", fetchedUser)
+        // console.log("all data", fetchedUser)
         setName(fetchedUser.name)
         setNumber(fetchedUser.contact)
         setSelectedGender(fetchedUser.gender)
@@ -297,7 +297,7 @@ else if (fetchedUser.visit_status === "House Visit") {
       });
       if (res.data.status === 200) {
         setData(res.data.data);
-        console.log("get note", res.data.data)
+        // console.log("get note", res.data.data)
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -373,7 +373,7 @@ const renderDateText = (date) =>
         agent: agentid
 
       };
-      console.log("notes data", updatedUser)
+      // console.log("notes data", updatedUser)
       const res = await ApiClient.post(
         "/save-lead-notes",
         updatedUser,
@@ -564,7 +564,7 @@ const completeside = () => {
         onPress: async () => {
           try {
             setLoading(true);
-            console.log("ID:", userSearchdata,token);
+            // console.log("ID:", userSearchdata,token);
 
             const res = await ApiClient.post(
               "/update-site-visit",
@@ -577,14 +577,14 @@ const completeside = () => {
               }
             );
 
-            console.log("Success Response:", res.data);
+            // console.log("Success Response:", res.data);
 
             Alert.alert("Success", "Site visit completed");
             setStatus("complete");
 
           } catch (error) {
             console.log("Full Error:", error);
-            console.log("Response Error:", error?.response?.data);
+            // console.log("Response Error:", error?.response?.data);
 
             Alert.alert(
               "Error",
@@ -615,7 +615,7 @@ const notcomplete = () => {
         onPress: async () => {
           try {
             setLoading(true);
-            console.log("ID:", userSearchdata,token);
+            // console.log("ID:", userSearchdata,token);
 
             const res = await ApiClient.post(
               "/update-site-visit",
@@ -628,14 +628,14 @@ const notcomplete = () => {
               }
             );
 
-            console.log("Success Response:", res.data);
+            // console.log("Success Response:", res.data);
 
             Alert.alert("Success", "Site visit removed");
             setStatus("notcomplete");
 
           } catch (error) {
             console.log("Full Error:", error);
-            console.log("Response Error:", error?.response?.data);
+            // console.log("Response Error:", error?.response?.data);
 
             Alert.alert(
               "Error",
@@ -654,7 +654,7 @@ const notcomplete = () => {
 
 
 
-console.log(VisitStatus,"VisitStatus")
+// console.log(VisitStatus,"VisitStatus")
 //end side compelete or not api 
 
 // show date in visit site 
@@ -677,7 +677,7 @@ console.log(VisitStatus,"VisitStatus")
 
 
 
-  console.log(siteVisitDate,"siteVisitDate")
+  // console.log(siteVisitDate,"siteVisitDate")
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View style={styles.container}>
@@ -867,7 +867,7 @@ console.log(VisitStatus,"VisitStatus")
             <Text>Notes</Text>
             <View style={styles.scrollBox}>
 
-              <ScrollView style={{ maxHeight: 200, }} nestedScrollEnabled={true}>
+              <ScrollView style={{ maxHeight: 300, }} nestedScrollEnabled={true}>
                 {data.length === 0 ? (
                   <Text style={styles.loadingText}>Loading...</Text>
                 ) : (
@@ -1210,7 +1210,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   textArea: {
-    height: 100,
+    height: 70,
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 10,
@@ -1274,7 +1274,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   textArea: {
-    height: 120,
+    height: 70,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 10,

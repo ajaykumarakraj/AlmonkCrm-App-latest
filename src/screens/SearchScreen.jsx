@@ -35,14 +35,14 @@ const SearchScreen = ({ navigation }) => {
 
     try {
 
-      console.log('Searching for:', searchQuery);
+      // console.log('Searching for:', searchQuery);
       const res = await ApiClient.post("/search", { user_id: `${user.user_id}`, search_value: searchQuery }, {
         headers: {
           Authorization: `Bearer ${token}`,
         }
       })
       setResult(res.data)
-      console.log("res.dataid", res.data)
+      // console.log("res.dataid", res.data)
     } catch (error) {
       console.error("Search error:", error);
       Alert.alert("Error", "Something went wrong during search.");

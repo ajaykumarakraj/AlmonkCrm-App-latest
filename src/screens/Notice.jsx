@@ -19,9 +19,9 @@ const Notice = ({ navigation }) => {
 
     launchImageLibrary(options, (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        // console.log('User cancelled image picker');
       } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorCode);
+        // console.log('ImagePicker Error: ', response.errorCode);
       } else {
         setImage(response.assets[0].uri); // Save the image URI to state
       }

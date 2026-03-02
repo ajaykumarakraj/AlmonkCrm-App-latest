@@ -93,7 +93,7 @@ useFocusEffect(
   // Fetch lead data from API
  const leadData = async (pageNumber = 1) => {
   setLoading(true);
-console.log(leadStatus, user.user_id)
+// console.log(leadStatus, user.user_id)
   try {
     const res = await ApiClient.post(
       `/get-lead-data?page=${pageNumber}`,
@@ -107,7 +107,7 @@ console.log(leadStatus, user.user_id)
         },
       }
     );
-console.log(res.data)
+// console.log(res.data)
     if (res.data.status === 200) {
       setData(res.data.data);
       setPage(res.data.meta.current_page);

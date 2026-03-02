@@ -7,9 +7,10 @@ import SettingsScreen from '../screens/SettingsScreen'; // Settings screen
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AddClientScreen from '../screens/AddClientScreen'; // AddClientScreen
 
-import NotificationScreen from '../screens/NotificationScreen';
+// import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/SearchScreen';
 import MainStack from './MainStack';
+import Addon from '../screens/Add-on';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,10 +30,9 @@ const TabNavigator = () => {
             iconName = focused ? 'add-circle' : 'add-circle-outline'; // Corrected icon name for AddClientScreen
           } else if (route.name === 'Search') {
             iconName = focused ? 'search' : 'search-outline'; // Corrected icon name for AddClientScreen
-          } else if (route.name === 'Notification') {
-            iconName = focused ? 'notifications' : 'notifications-outline';
-
-          }
+          } else if (route.name === 'Add-on') {
+  iconName = focused ? 'person-add' : 'person-add-outline';
+}
 
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -45,7 +45,8 @@ const TabNavigator = () => {
       <Tab.Screen name="AddClientScreen" component={AddClientScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Notification" component={NotificationScreen} />
+       <Tab.Screen name="Add-on" component={Addon} />
+      {/* <Tab.Screen name="Notification" component={NotificationScreen} /> */}
       
     </Tab.Navigator>
   );

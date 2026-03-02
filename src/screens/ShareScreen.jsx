@@ -37,7 +37,7 @@ const ShareScreen = ({ navigation }) => {
 
     try {
       const result = await Share.open(shareOptions);
-      console.log(result); // Log result
+      // console.log(result); // Log result
     } catch (error) {
       console.log('Error sharing to ' + app + ': ', error);
     }

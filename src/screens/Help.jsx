@@ -1,46 +1,61 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking } from 'react-native'
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const Help = ({ navigation }) => {
-
-  const handleCallPress = () => {
-    Linking.openURL('tel:+1234567890'); // Replace with the actual phone number
-  };
+const Help = () => {
   return (
-    <ScrollView style={styles.container}> 
-      {/* <View style={styles.header}>
-               <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                 <Ionicons name="arrow-back" size={24} color="white" />
-               </TouchableOpacity>
-               <Text style={styles.headerText}>Help</Text>
-             </View> */}
-      <View style={styles.dflex}>
-        <Text style={{ fontSize: 20, fontWeight: 600, padding: 10 }}>
-          Support No - 1234567890
-        </Text>
-        <Text style={{ fontSize: 25, backgroundColor: "red", padding: 10, borderRadius: 10, color: "#fff" }} onPress={handleCallPress}>
-          Call Now
+    <View style={styles.container}>
+      
+      <View style={styles.card}>
+        <Ionicons name="construct-outline" size={80} color="#003961" />
+
+        <Text style={styles.title}>Coming Soon</Text>
+
+        <Text style={styles.subtitle}>
+          We are working on something amazing.
+          {"\n"}Support feature will be available soon.
         </Text>
       </View>
 
+    </View>
+  );
+};
 
-    </ScrollView>
-  )
-}
+export default Help;
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f4f6f9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
 
-  container: { flex: 1, backgroundColor: "#f1f1f1", padding: 10, },
-  header: { flexDirection: "row", alignItems: "center", backgroundColor: "red", padding: 15, borderRadius: 10, marginBottom: 15 },
-  backButton: { marginRight: 10 },
-  headerText: { color: "white", fontSize: 20, fontWeight: "bold" },
+  card: {
+    backgroundColor: '#fff',
+    width: '100%',
+    borderRadius: 15,
+    padding: 30,
+    alignItems: 'center',
+    elevation: 5, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+  },
 
-  dflex: {
-    fontSize: 30,
-    display: "flex",
-    flexDirection: "row",
-    gap: 20
-  }
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginTop: 20,
+    color: '#003961',
+  },
 
-})
-
-export default Help
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 10,
+    lineHeight: 22,
+  },
+});

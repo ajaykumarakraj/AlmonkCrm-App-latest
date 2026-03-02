@@ -15,7 +15,7 @@ const Setting = () => {
     if (selectedDate) {
       setDate(selectedDate);
       // 👉 Action after selecting date
-      console.log("Selected office visit date:", selectedDate.toLocaleDateString('en-GB'));
+      // console.log("Selected office visit date:", selectedDate.toLocaleDateString('en-GB'));
     }
   };
 

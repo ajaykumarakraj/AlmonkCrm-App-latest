@@ -26,7 +26,7 @@ const SignupScreen = ({ navigation }) => {
 
   const supportNumber = "9266307700"; 
   const handleSignup = async () => {
-    console.log("run")
+  
     if (!name || !phone || !email || !company || !city) {
       Alert.alert("Error", "Please fill all fields");
       return;

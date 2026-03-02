@@ -57,14 +57,14 @@ const SettingsScreen = ({ navigation }) => {
 
 
       <View style={styles.row}>
-        <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Setting')}>
+        {/* <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Setting')}>
           <Image source={require('../../Assets/icons/settings.png')} style={{ width: 35, height: 35 }} />
           <Text style={styles.boxText}>Settings </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Help')}>
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Help')}>
           <Image source={require('../../Assets/icons/help.png')} style={{ width: 35, height: 35 }} />
           <Text style={styles.boxText}>Help</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
       </View>
       <View style={styles.row}>
@@ -79,10 +79,10 @@ const SettingsScreen = ({ navigation }) => {
 
       </View>
       <View style={styles.row}>
-        <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Notice')}>
+        {/* <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Notice')}>
           <Image source={require('../../Assets/icons/board.png')} style={{ width: 35, height: 35 }} />
           <Text style={styles.boxText}>Notice Board</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity style={styles.box} onPress={logout}>
           <Image source={require('../../Assets/icons/log-out.png')} style={{ width: 35, height: 35 }} />
           <Text style={styles.boxText}>Log Out</Text>

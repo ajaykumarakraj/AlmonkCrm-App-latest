@@ -57,7 +57,7 @@ const CheckIn = () => {
       );
     });
   };
-console.log(user?.user_id,"check id" )
+// console.log(user?.user_id,"check id" )
   const getvalue = async (coords, type) => {
     if (!coords) {
       Alert.alert('Error', 'Location data is not available.');
