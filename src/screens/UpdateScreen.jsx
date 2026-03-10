@@ -11,6 +11,7 @@ import {
   Button,
   Platform,
   Image,
+  Modal,
   Linking
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,6 +26,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { RefreshControl } from 'react-native';
 const UpdateScreen = ({ route, navigation }) => {
+   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   // const { user } = route.params;
   const { userSearchdata } = route.params;
@@ -90,11 +92,15 @@ const [status, setStatus] = useState(null);
   const [callAction, setCallAction] = useState("");
 //visit status
 const [VisitStatus,setVisitStatus]=useState("")
+//show visit complete data 
+const [poupdata,setPoupdata]=useState("")
 
-// show visit status 
-const [VisitDate,setVisitDate]=useState("")
-const [HouseDate,setHouseDate]=useState("")
-const [OfficeDate,setOfficeDate]=useState("")
+// VisitCompleted  
+const [visitCompleted,setVisitCompleted]=useState("")
+// // show visit status 
+// const [VisitDate,setVisitDate]=useState("")
+// const [HouseDate,setHouseDate]=useState("")
+// const [OfficeDate,setOfficeDate]=useState("")
 
 // console.log(VisitDate)
 
@@ -180,6 +186,23 @@ const visitstatus=[
     hidePicker();
   };
 
+//poup funtion
+  const openPopup = async () => {
+    setModalVisible(true);
+
+    try {
+      const response = await axios.get(
+        "https://jsonplaceholder.typicode.com/posts/1"
+      );
+      setPoupdata(response.data);
+    } catch (error) {
+      console.log("API Error:", error);
+    }
+  };
+
+//poup funtion end
+
+
   useEffect(() => {
     fetchStates();
     noteData();
@@ -249,7 +272,7 @@ const visitstatus=[
 
         const fetchedUser = res.data.data;
         // console.log("run")
-        // console.log("all data", fetchedUser)
+        console.log("all data", fetchedUser)
         setName(fetchedUser.name)
         setNumber(fetchedUser.contact)
         setSelectedGender(fetchedUser.gender)
@@ -267,6 +290,7 @@ const visitstatus=[
         setTeamLeader(res.data.tl_name)
         setGetAgent(res.data.agent_name)
         setVisitStatus(fetchedUser.visit_status)
+        
        if (fetchedUser.visit_status === "Schedule Site Visit") {
   if (fetchedUser.current_site_visit) {
     setSiteVisitDate(new Date(fetchedUser.current_site_visit));
@@ -297,7 +321,8 @@ else if (fetchedUser.visit_status === "House Visit") {
       });
       if (res.data.status === 200) {
         setData(res.data.data);
-        // console.log("get note", res.data.data)
+        console.log("get note", res.data)
+        setVisitCompleted(res.data.schedule_log)
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -335,10 +360,10 @@ const renderDateText = (date) =>
     // console.log("date:", formattedDate)
     // console.log("Call status:", Callstatus)
     // console.log("last Call Action:", callAction)
-    // console.log("lead:", lead)
+    console.log("leadkey:", leadkey)
 
     // Rule 1: Require follow-up date if not archived and no call status selected
-    if (lead !== '4' && !formattedDate && !Callstatus == "0") {
+    if (leadkey !== '4' && !formattedDate && !Callstatus == "0") {
       setError('Follow-Up Date is required unless the lead is Archived.');
       return;
     }
@@ -370,10 +395,11 @@ const renderDateText = (date) =>
         lead_status: leadkey,
         remark: "",
         team_leader: teamLeaderId,
-        agent: agentid
+        agent: agentid,
+       
 
       };
-      // console.log("notes data", updatedUser)
+      console.log("notes data", updatedUser)
       const res = await ApiClient.post(
         "/save-lead-notes",
         updatedUser,
@@ -424,7 +450,7 @@ const renderDateText = (date) =>
         team_leader: teamLeaderId,
         agent: agentid
       };
-      // console.log("post", updatedUser)
+      console.log("post", updatedUser)
       const res = await ApiClient.post(
         "/save-update-lead-data",
         updatedUser,
@@ -457,25 +483,43 @@ const renderDateText = (date) =>
 
 
 
-  const onselectteamleader = async (id) => {
-    // console.log("teamlederid", id)
-    setTeamLeaderId(id)
+const onselectteamleader = (id) => {
+  setTeamLeaderId(id);
+  setGetAgent("")
+};
+
+useEffect(() => {
+  const fetchAgents = async () => {
+    if (!teamLeaderId) return;
+
     try {
-      const res = await axios.get(`https://api.almonkdigital.in/api/admin/get-agent/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `https://api.almonkdigital.in/api/admin/get-agent/${teamLeaderId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       if (res.status === 200) {
-        setAgentList(res.data.data.map((ag) => ({ key: ag.id.toString(), value: ag.name })));
+        setAgentList(
+          res.data.data.map((ag) => ({
+            key: ag.id.toString(),
+            value: ag.name,
+          }))
+        );
       }
     } catch (error) {
       console.log("Agent fetch error:", error);
     }
   };
+
+  fetchAgents();
+}, [teamLeaderId]);
   // console.log("lead user", user.user_id)
   // console.log("data note", data)
 
 
-  // console.log("date", dateTime)
+  // console.log("date", visitCompleted)
 
 
 // bussiness whatsapp 
@@ -508,7 +552,7 @@ const handleBussinessWhatsapp = async () => {
       // 🔥 Number clean karo
       const phone = number.replace(/[^0-9]/g, "");
 
-      const message = "Hello, regarding your enquiry.";
+      const message = "Hello, Thank you for showing interest.";
 
       // 🔥 Direct WhatsApp App Open
       const url = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(message)}`;
@@ -569,6 +613,8 @@ const completeside = () => {
             const res = await ApiClient.post(
               "/update-site-visit",
               {
+                visit_status:VisitStatus,
+        site_visit: siteVisitDate,
                 id: userSearchdata,
                 site_status: 1
               },
@@ -620,6 +666,8 @@ const notcomplete = () => {
             const res = await ApiClient.post(
               "/update-site-visit",
               {
+                visit_status:VisitStatus,
+               site_visit: siteVisitDate,
                 id: userSearchdata,
                 site_status: 2
               },
@@ -678,6 +726,10 @@ const notcomplete = () => {
 
 
   // console.log(siteVisitDate,"siteVisitDate")
+
+  const sortedTeamLeaderList = [...teamleaderlist].sort((a, b) =>
+  a.value.localeCompare(b.value)
+);
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View style={styles.container}>
@@ -828,7 +880,7 @@ const notcomplete = () => {
                 <Text style={styles.disabledText}>{teamLeader || "N/A"}</Text>
               ) : (
                 <SelectList
-                  data={teamleaderlist}
+                  data={sortedTeamLeaderList}
                   setSelected={onselectteamleader}
                   placeholder={teamLeader}
                   // save="value"
@@ -845,7 +897,7 @@ const notcomplete = () => {
                 <SelectList
                   data={agentlist}
                   setSelected={setAgentId}
-                  placeholder={agentget}
+                  placeholder={agentget||"Select Agent"}
                   // save="value"
                   search={false}
                   defaultValue={agentget}
@@ -864,6 +916,7 @@ const notcomplete = () => {
           </>
         ) : (
           <>
+          
             <Text>Notes</Text>
             <View style={styles.scrollBox}>
 
@@ -986,12 +1039,67 @@ const notcomplete = () => {
         color={status === "notcomplete" ? "red" : "red"} 
       />
     </TouchableOpacity>
-
+<TouchableOpacity 
+  onPress={openPopup}
+  style={{
+    backgroundColor: '#003961',
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom:5
+  }}
+>
+  <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
+    View
+  </Text>
+</TouchableOpacity>
   </View>
 </View>
-
-<View>
   
+<View>
+  <Modal transparent={true} visible={modalVisible} animationType="slide">
+        <View style={styles.overlay}>
+          <View style={styles.popup}>
+
+            <Text style={styles.title}>API Data</Text>
+
+         {visitCompleted ? (
+  visitCompleted.map((v, i) => (
+    <View key={i} style={styles.visitCard}>
+      
+      <View style={styles.row}>
+        <Text style={styles.label}>Date:</Text>
+        <Text style={styles.value}>{v.date}</Text>
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Status:</Text>
+        <Text style={[
+          styles.status,
+          v.status === "Completed" ? styles.completed : styles.pending
+        ]}>
+          {v.status}
+        </Text>
+      </View>
+
+    </View>
+  ))
+) : (
+  <Text>Loading...</Text>
+)}
+
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={{ color: "#fff" }}>Close</Text>
+            </TouchableOpacity>
+
+          </View>
+        </View>
+      </Modal>
 </View>
             <View   style={styles.visit}>
 <SelectList 
@@ -1079,7 +1187,7 @@ const notcomplete = () => {
                 setSelected={handleCallStatus}
                 placeholder="Select Call Status"
                 save="value"
-                search={false}
+                search={false} 
                 // defaultValue={call}
               />
             </View>
@@ -1384,12 +1492,76 @@ const styles = StyleSheet.create({
   statusadd:{
      gap:15,
      display:"flex",
-    flexDirection:"row"
+    flexDirection:"row",
+    justifyContent:"space-around",
+    alignItems:"center",
+    width:"75%"
   },
   visit:{
     marginBottom:10,
     // padding:10
-  }
+  },
+    overlay:{
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center",
+    backgroundColor:"rgba(0,0,0,0.5)"
+  },
+  popup:{
+    width:300,
+    backgroundColor:"#fff",
+    padding:20,
+    borderRadius:10
+  },
+  title:{
+    fontSize:18,
+    fontWeight:"bold",
+    marginBottom:10
+  },
+  closeBtn:{
+    marginTop:20,
+    backgroundColor:"red",
+    padding:10,
+    borderRadius:6,
+    alignItems:"center"
+  },
+visitCard: {
+  backgroundColor: "#fff",
+  padding: 12,
+  marginVertical: 6,
+  borderRadius: 8,
+  elevation: 2,
+  shadowColor: "#000",
+  shadowOpacity: 0.1,
+  shadowRadius: 4
+},
+
+row: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  marginBottom: 4
+},
+
+label: {
+  fontWeight: "bold",
+  color: "#444"
+},
+
+value: {
+  color: "#333"
+},
+
+status: {
+  fontWeight: "600"
+},
+
+completed: {
+  color: "green"
+},
+
+pending: {
+  color: "orange"
+}
 });
 
 

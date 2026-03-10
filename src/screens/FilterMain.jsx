@@ -299,7 +299,7 @@ const fetchRequirements = async () => {
   style={styles.pickerWrapper}
   pointerEvents={user.role === "Team Leader" ? "none" : "auto"}
 >
- <SelectList
+<SelectList
   data={teamleaderList}
   setSelected={(id) => {
     const selectedTL = teamleaderList.find(tl => tl.key === id);
@@ -307,8 +307,12 @@ const fetchRequirements = async () => {
     setTeamleadername(selectedTL?.value || "");
     handleTeamLeaderSelect(id);
   }}
-  placeholder={user.name||Teamleadername || "Team Leader"}
+  placeholder={Teamleadername || user.name || "Team Leader"}
   search={true}
+  inputStyles={{ color: "black" }}
+  dropdownTextStyles={{ color: "black" }}
+  searchPlaceholder="Search..."
+  searchPlaceholderTextColor="black"
 />
 </View>
 

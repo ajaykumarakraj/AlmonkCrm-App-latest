@@ -13,6 +13,7 @@ import {
   FlatList,
   Alert,
   TextInput,
+  RefreshControl,
   ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -43,7 +44,8 @@ const mapLeadTypeToStatus = (type) => {
 };
 
 const HomeTableList = ({ navigation, route }) => {
-
+  const [refreshing, setRefreshing] = useState(false);
+const isFirstLoad = useRef(true);
 const [data, setData] = useState([]);
 const [page, setPage] = useState(1);
 const [lastPage, setLastPage] = useState(1);
@@ -59,6 +61,14 @@ const [loading, setLoading] = useState(false);
   const { user, token } = useAuth();
   const { leadType } = route.params || {};
 
+
+
+    const onRefresh = () => {
+    setRefreshing(true);
+    leadData();
+    // numData(); // ✅ fixed
+    setTimeout(() => setRefreshing(false), 1500);
+  };
   // ✅ Memoize the leadStatus value
   const leadStatus = useMemo(() => mapLeadTypeToStatus(leadType), [leadType]);
 
@@ -84,12 +94,16 @@ const [loading, setLoading] = useState(false);
 useFocusEffect(
   useCallback(() => {
     if (user?.user_id && token) {
-      leadData(1);
+      if (isFirstLoad.current) {
+        leadData(1); // only load first time
+        isFirstLoad.current = false;
+      }
     }
   }, [user?.user_id, token, leadStatus])
 );
 
-// console.log("lead type",leadStatus)
+ // console.log("lead type",leadStatus)
+
   // Fetch lead data from API
  const leadData = async (pageNumber = 1) => {
   setLoading(true);
@@ -200,7 +214,7 @@ const handlePrev = () => {
           />
         </TouchableOpacity>
 
-        {Number(!leadStatus) == 0 && (
+        {/* {Number(!leadStatus) == 0 && ( */}
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('UpdateScreen', { userSearchdata: item.id })
@@ -209,7 +223,7 @@ const handlePrev = () => {
           >
             <Ionicons name="create-outline" size={24} color="red" />
           </TouchableOpacity>
-        )}
+        {/* )} */}
       </View>
 
       <View style={styles.desigedtext}>
@@ -235,7 +249,7 @@ const handlePrev = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}  >
     
 
       <TextInput
@@ -255,7 +269,7 @@ const handlePrev = () => {
       {loading ? (
         <ActivityIndicator size="large" color="#003961" style={{ marginTop: 20 }} />
       ) : (
-     <FlatList
+     <FlatList  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
   data={filteredData}
   keyExtractor={(item) => item.id.toString()}
   renderItem={renderItem}

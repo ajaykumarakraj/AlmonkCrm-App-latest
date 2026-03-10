@@ -117,9 +117,9 @@ const FilterHomeScreen = ({ navigation ,route}) => {
       <View style={styles.container}>
 
         <View style={styles.row}>
-          {user?.role === "Admin" && (
+          {/* {user?.role === "Admin" && (
             <LeadBox title="Fresh Leads" count={data.fresh_lead} icon={require('../../Assets/icons/Freshlead.png')} onPress={() => goToTable('fresh_lead')} />
-          )}
+          )} */}
           <LeadBox title="New Leads" count={data.new_lead} icon={require('../../Assets/icons/Newlead.png')} onPress={() => goToTable('new_lead')} />
         </View>
 

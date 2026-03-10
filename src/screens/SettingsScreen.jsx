@@ -42,14 +42,19 @@ const SettingsScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.row}>
-              <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Table')}>
+              {/* <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Table')}>
                 <Image source={require('../../Assets/icons/allleads.png')} style={{ width: 35, height: 35 }} />
                 <Text style={styles.boxText}>View All Leads</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('ShareScreen')}>
                 <Image source={require('../../Assets/icons/sharing.png')} style={{ width: 35, height: 35 }} />
                 <Text style={styles.boxText}>Share App</Text>
+                
               </TouchableOpacity>
+               <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Help')}>
+          <Image source={require('../../Assets/icons/seo-report.png')} style={{ width: 35, height: 35 }} />
+          <Text style={styles.boxText}>Report</Text>
+        </TouchableOpacity>
             </View>
           </View>
         )
@@ -72,24 +77,21 @@ const SettingsScreen = ({ navigation }) => {
           <Image source={require('../../Assets/icons/check.png')} style={{ width: 35, height: 35 }} />
           <Text style={styles.boxText}>Check In </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Help')}>
-          <Image source={require('../../Assets/icons/seo-report.png')} style={{ width: 35, height: 35 }} />
-          <Text style={styles.boxText}>Report</Text>
-        </TouchableOpacity>
-
-      </View>
-      <View style={styles.row}>
-        {/* <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Notice')}>
-          <Image source={require('../../Assets/icons/board.png')} style={{ width: 35, height: 35 }} />
-          <Text style={styles.boxText}>Notice Board</Text>
-        </TouchableOpacity> */}
         <TouchableOpacity style={styles.box} onPress={logout}>
           <Image source={require('../../Assets/icons/log-out.png')} style={{ width: 35, height: 35 }} />
           <Text style={styles.boxText}>Log Out</Text>
         </TouchableOpacity>
 
-
       </View>
+      {/* <View style={styles.row}>
+       <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Notice')}>
+          <Image source={require('../../Assets/icons/board.png')} style={{ width: 35, height: 35 }} />
+          <Text style={styles.boxText}>Notice Board</Text>
+        </TouchableOpacity> 
+       
+
+
+      </View> */}
       <View style={styles.row}>
       </View>
     </View>

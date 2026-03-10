@@ -1,3 +1,4 @@
+
 import React, { useState, useLayoutEffect } from 'react';
 import {
   View,
@@ -21,29 +22,28 @@ const Addon = ({ navigation }) => {
   const [budget, setBudget] = useState('');
   const [requirement, setRequirement] = useState('');
 
- useLayoutEffect(() => {
-  navigation.setOptions({
-    headerLeft: () => (
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
-    ),
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+      ),
 
-    // ✅ HEADER RIGHT BUTTON WAPAS ADD
-    headerRight: () => (
-      <TouchableOpacity 
-        onPress={() => navigation.navigate("Filter")} 
-        style={styles.filterButton}
-      >
-        <Ionicons name="filter-outline" size={24} color="black" />
-      </TouchableOpacity>
-    ),
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Filter")}
+          style={styles.filterButton}
+        >
+          <Ionicons name="filter-outline" size={24} color="black" />
+        </TouchableOpacity>
+      ),
 
-    title: "Add On Client",
-    headerStyle: { backgroundColor: "#f5f5f5" },
-    headerTitleStyle: { fontSize: 20 },
-  });
-}, [navigation]);
+      title: "Add On Client",
+      headerStyle: { backgroundColor: "#f5f5f5" },
+      headerTitleStyle: { fontSize: 20 },
+    });
+  }, [navigation]);
 
   const handleSubmit = async () => {
     if (!name || !phone || !city || !budget || !requirement) {
@@ -52,7 +52,7 @@ const Addon = ({ navigation }) => {
     }
 
     try {
-  const  res=  await ApiClient.post(
+      const res = await ApiClient.post(
         "/addons-client",
         {
           user_id: user.user_id,
@@ -68,20 +68,20 @@ const Addon = ({ navigation }) => {
           },
         }
       );
-if(res.data.status===200){
- Alert.alert("Success", res.data.message);
 
-      setName('');
-      setPhone('');
-      setCity('');
-      setBudget('');
-      setRequirement('');
-}
-     
+      if (res.data.status === 200) {
+        Alert.alert("Success", res.data.message);
+
+        setName('');
+        setPhone('');
+        setCity('');
+        setBudget('');
+        setRequirement('');
+      }
 
     } catch (error) {
       console.error("Submit error:", error);
-      Alert.alert("Error", error);
+      Alert.alert("Error", "Something went wrong");
     }
   };
 
@@ -95,27 +95,28 @@ if(res.data.status===200){
         <TextInput
           style={styles.input}
           placeholder="Name"
+          placeholderTextColor="#000"
           value={name}
           onChangeText={setName}
         />
       </View>
 
       {/* Phone */}
-   <View style={styles.inputContainer}>
-  <Ionicons name="call-outline" size={20} color="#555" />
-  <TextInput
-    style={styles.input}
-    placeholder="Phone"
-    keyboardType="number-pad"
-    maxLength={10}   // ✅ max 10 digits
-    value={phone}
-    onChangeText={(text) => {
-      // ✅ Sirf numbers allow
-      const cleaned = text.replace(/[^0-9]/g, '');
-      setPhone(cleaned);
-    }}
-  />
-</View>
+      <View style={styles.inputContainer}>
+        <Ionicons name="call-outline" size={20} color="#555" />
+        <TextInput
+          style={styles.input}
+          placeholder="Phone"
+          placeholderTextColor="#000"
+          keyboardType="number-pad"
+          maxLength={10}
+          value={phone}
+          onChangeText={(text) => {
+            const cleaned = text.replace(/[^0-9]/g, '');
+            setPhone(cleaned);
+          }}
+        />
+      </View>
 
       {/* City */}
       <View style={styles.inputContainer}>
@@ -123,26 +124,24 @@ if(res.data.status===200){
         <TextInput
           style={styles.input}
           placeholder="City"
+          placeholderTextColor="#000"
           value={city}
           onChangeText={setCity}
         />
       </View>
 
       {/* Budget */}
-     <View style={styles.inputContainer}>
-  <Ionicons name="cash-outline" size={20} color="#555" />
-  <TextInput
-    style={styles.input}
-    placeholder="Budget"
-    keyboardType="number-pad"
-    value={budget}
-    onChangeText={(text) => {
-      // ✅ Sirf numbers allow
-      const cleaned = text.replace(/[^0-9]/g, '');
-      setBudget(cleaned);
-    }}
-  />
-</View>
+      <View style={styles.inputContainer}>
+        <Ionicons name="cash-outline" size={20} color="#555" />
+        <TextInput
+          style={styles.input}
+          placeholder="Budget"
+          placeholderTextColor="#000"
+          keyboardType="number-pad"
+          value={budget}
+          onChangeText={setBudget}
+        />
+      </View>
 
       {/* Requirement */}
       <View style={[styles.inputContainer, { alignItems: 'flex-start' }]}>
@@ -155,8 +154,9 @@ if(res.data.status===200){
         <TextInput
           style={[styles.input, styles.requirementInput]}
           placeholder="Requirement"
+          placeholderTextColor="#000"
           multiline
-          textAlignVertical="top"   // 🔥 Important (Android)
+          textAlignVertical="top"
           value={requirement}
           onChangeText={setRequirement}
         />
@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
+
   heading: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -199,6 +200,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 12,
     fontSize: 16,
+    color: "#000"
   },
 
   requirementInput: {
@@ -222,7 +224,9 @@ const styles = StyleSheet.create({
   backButton: {
     marginLeft: 10,
   },
-   filterButton: {
+
+  filterButton: {
     marginRight: 10
   },
 });
+

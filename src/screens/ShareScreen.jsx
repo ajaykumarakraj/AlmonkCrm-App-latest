@@ -13,21 +13,21 @@ const ShareScreen = ({ navigation }) => {
       case 'whatsapp':
         shareOptions = {
           title: 'Share via WhatsApp',
-          message: 'Check out this awesome app!',
+          message: "Download Almonk Digital CRM App now:\n\nhttps://play.google.com/store/apps/details?id=com.futurekey&hl=en_IN",
           social: Share.Social.WHATSAPP, // Specify WhatsApp
         };
         break;
       case 'facebook':
         shareOptions = {
           title: 'Share via Facebook',
-          message: 'Check out this awesome app!',
+          message: "Download Almonk Digital CRM App now:\n\nhttps://play.google.com/store/apps/details?id=com.futurekey&hl=en_IN",
           social: Share.Social.FACEBOOK, // Specify Facebook
         };
         break;
       case 'instagram':
         shareOptions = {
           title: 'Share via Instagram',
-          message: 'Check out this awesome app!',
+          message:"Download Almonk Digital CRM App now:\n\nhttps://play.google.com/store/apps/details?id=com.futurekey&hl=en_IN",
           social: Share.Social.INSTAGRAM, // Specify Instagram
         };
         break;

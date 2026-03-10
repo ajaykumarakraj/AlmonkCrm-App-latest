@@ -13,6 +13,7 @@ import {
   FlatList,
   Alert,
   TextInput,
+  RefreshControl,
   ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -36,7 +37,8 @@ const mapLeadTypeToStatus = (type) => {
 };
 
 const FilterTableList = ({ navigation, route }) => {
-
+    const [refreshing, setRefreshing] = useState(false);
+const isFirstLoad = useRef(true);
 const [data, setData] = useState([]);
 const [page, setPage] = useState(1);
 const [lastPage, setLastPage] = useState(1);
@@ -52,7 +54,11 @@ const [loading, setLoading] = useState(false);
   const { user, token } = useAuth();
   const { leadsource ,project,leadType,todate,fromdate ,currentForm} = route.params || {};
 
-
+const onRefresh = () => {
+    setRefreshing(true);
+   leadData();
+    setTimeout(() => setRefreshing(false), 1500);
+  };
 
   // ✅ Memoize the leadStatus value
   const leadStatus = useMemo(() => mapLeadTypeToStatus(leadType), [leadType]);
@@ -94,7 +100,10 @@ useEffect(() => {
 useFocusEffect(
   useCallback(() => {
     if (user?.user_id && token) {
-      leadData(1);
+      if (isFirstLoad.current) {
+        leadData(1); // only load first time
+        isFirstLoad.current = false;
+      }
     }
   }, [user?.user_id, token, leadStatus])
 );
@@ -280,7 +289,7 @@ const handlePrev = () => {
       {loading ? (
         <ActivityIndicator size="large" color="#003961" style={{ marginTop: 20 }} />
       ) : (
-     <FlatList
+     <FlatList refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
   data={filteredData}
   keyExtractor={(item) => item.id.toString()}
   renderItem={renderItem}
