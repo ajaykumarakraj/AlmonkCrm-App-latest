@@ -106,7 +106,7 @@ const AddClientScreen = ({ navigation }) => {
 
   const fetchStates = async () => {
     try {
-      const res = await axios.get("https://api.almonkdigital.in/api/state-list", {
+      const res = await ApiClient.get("/state-list", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 200) {
@@ -119,7 +119,7 @@ const AddClientScreen = ({ navigation }) => {
 
   const fetchRequirements = async () => {
     try {
-      const res = await axios.get("https://api.almonkdigital.in/api/admin/view-master-setting", {
+      const res = await ApiClient.get("/admin/view-master-setting", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 200) {
@@ -146,7 +146,7 @@ const AddClientScreen = ({ navigation }) => {
 
   const fetchTeamLeaders = async () => {
     try {
-      const res = await axios.get("https://api.almonkdigital.in/api/admin/get-team-leader", {
+      const res = await ApiClient.get("/admin/get-team-leader", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 200) {
@@ -160,7 +160,7 @@ const AddClientScreen = ({ navigation }) => {
   const handleTeamLeaderSelect = async (id) => {
     setTeamleader(id);
     try {
-      const res = await axios.get(`https://api.almonkdigital.in/api/admin/get-agent/${id}`, {
+      const res = await ApiClient.get(`/admin/get-agent/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 200) {

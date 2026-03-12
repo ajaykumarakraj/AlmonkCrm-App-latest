@@ -14,6 +14,8 @@ import {
   Modal,
   Linking
 } from "react-native";
+import Clipboard from "@react-native-clipboard/clipboard";
+import SendIntentAndroid from "react-native-send-intent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -25,7 +27,11 @@ import { useAuth } from "../context/AuthContext";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { RefreshControl } from 'react-native';
+import { NativeModules } from "react-native";
+
+
 const UpdateScreen = ({ route, navigation }) => {
+  const { WhatsAppBusiness } = NativeModules;
    const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   // const { user } = route.params;
@@ -144,8 +150,11 @@ const visitstatus=[
     'WhatsApp',
     'Not Interested',
     'Fake Query',
-    'Hung Up',
+    'Hang Up',
     'Wrong Number',
+   
+
+
   ];
 
   const notConnectedOptions = [
@@ -154,6 +163,7 @@ const visitstatus=[
     'Number Busy',
     'Number Blocked',
     'Incoming Unavailable',
+     'Switch Off',
     'Other',
   ];
 
@@ -522,11 +532,7 @@ useEffect(() => {
   // console.log("date", visitCompleted)
 
 
-// bussiness whatsapp 
-
-
-
-const handleBussinessWhatsapp = async () => {
+const handleWhatsapp = async () => {
   try {
     const postkey = {
       id: userSearchdata,
@@ -552,10 +558,10 @@ const handleBussinessWhatsapp = async () => {
       // 🔥 Number clean karo
       const phone = number.replace(/[^0-9]/g, "");
 
-      const message = "Hello, Thank you for showing interest.";
+      const message = "";
 
       // 🔥 Direct WhatsApp App Open
-      const url = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(message)}`;
+     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
       await Linking.openURL(url);
     }
@@ -565,6 +571,70 @@ const handleBussinessWhatsapp = async () => {
     Alert.alert("Error", "WhatsApp not installed or API failed");
   }
 };
+// bussiness whatsapp 
+
+// const handleBussinessWhatsapp = () => {
+
+//   SendIntentAndroid.openApp("com.whatsapp.w4b");
+
+// };
+
+
+const handleBussinessWhatsapp = async () => {
+  try {
+    const postkey = {
+      id: userSearchdata,
+      user_id: user.user_id,
+      team_leader: teamLeaderId,
+      agent: agentid,
+      call_captured: "whatsapp"
+    };
+console.log("postkey",postkey)
+    const reswhatsapp = await axios.post(
+      "https://api.almonkdigital.in/api/call-capture",
+      postkey,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      }
+    );
+
+    if (reswhatsapp.status === 200) {
+
+      const phone = "91" + number.replace(/[^0-9]/g, "");
+      const message = "";
+
+      // 🔥 Direct WhatsApp Business Open
+      WhatsAppBusiness.open(phone, encodeURIComponent(message));
+    }
+
+  } catch (error) {
+    console.log("WhatsApp Error:", error);
+  }
+};
+// const handleBussinessWhatsapp = () => {
+//   const phone = "91" + number.replace(/[^0-9]/g, "");
+//   const message = "Hello";
+
+//   WhatsAppBusiness.open(phone, encodeURIComponent(message));
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleCall = async () => {
     try {
@@ -981,16 +1051,16 @@ const notcomplete = () => {
               <View style={styles.icon}>
                 <TouchableOpacity onPress={handleBussinessWhatsapp}>
                   <Image
-                    source={require('../../Assets/icons/whatsapp.png')}
+                    source={require('../../Assets/icons/whatsappB.png')}
                     style={{ width: 30, height: 30 }}
                   />
                 </TouchableOpacity>
-                {/* <TouchableOpacity onPress={handleWhatsapp}>
+                <TouchableOpacity onPress={handleWhatsapp}>
                   <Image
                     source={require('../../Assets/icons/whatsapp.png')}
                     style={{ width: 30, height: 30 }}
                   />
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                 <TouchableOpacity onPress={handleCall}>
                   <Image
                     source={require('../../Assets/icons/phone-call.png')}
@@ -1063,32 +1133,40 @@ const notcomplete = () => {
         <View style={styles.overlay}>
           <View style={styles.popup}>
 
-            <Text style={styles.title}>API Data</Text>
+            <Text style={styles.title}>Site Shedule List</Text>
 
-         {visitCompleted ? (
-  visitCompleted.map((v, i) => (
-    <View key={i} style={styles.visitCard}>
-      
-      <View style={styles.row}>
-        <Text style={styles.label}>Date:</Text>
-        <Text style={styles.value}>{v.date}</Text>
-      </View>
+       <ScrollView >
+  {visitCompleted ? (
+    <>
+      {visitCompleted.map((v, i) => (
+        <View key={i} style={styles.visitCard}>
+          
+          <View style={styles.row}>
+            <Text style={styles.label}>Date:</Text>
+            <Text style={styles.value}>{v.date}</Text>
+          </View>
 
-      <View style={styles.row}>
-        <Text style={styles.label}>Status:</Text>
-        <Text style={[
-          styles.status,
-          v.status === "Completed" ? styles.completed : styles.pending
-        ]}>
-          {v.status}
-        </Text>
-      </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Status:</Text>
+            <Text
+              style={[
+                styles.status,
+                v.status === "Completed"
+                  ? styles.completed
+                  : styles.pending,
+              ]}
+            >
+              {v.status}
+            </Text>
+          </View>
 
-    </View>
-  ))
-) : (
-  <Text>Loading...</Text>
-)}
+        </View>
+      ))}
+    </>
+  ) : (
+    <Text>Loading...</Text>
+  )}
+</ScrollView>
 
             <TouchableOpacity
               style={styles.closeBtn}
@@ -1503,15 +1581,19 @@ const styles = StyleSheet.create({
   },
     overlay:{
     flex:1,
+
+   
     justifyContent:"center",
     alignItems:"center",
-    backgroundColor:"rgba(0,0,0,0.5)"
+    backgroundColor:"rgba(0,0,0,0.5)",
+  
   },
   popup:{
     width:300,
     backgroundColor:"#fff",
     padding:20,
-    borderRadius:10
+    borderRadius:10,
+     maxHeight:500,
   },
   title:{
     fontSize:18,
