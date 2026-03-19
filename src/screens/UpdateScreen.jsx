@@ -74,15 +74,8 @@ const UpdateScreen = ({ route, navigation }) => {
 const [status, setStatus] = useState(null);
   // Notes update
   const [siteVisitDate, setSiteVisitDate] = useState(null);
-  // const [houseVisitDate, setHouseVisitDate] = useState(null);
-  // const [officeVisitDate, setOfficeVisitDate] = useState(null);
-  // const [midwayVisitDate, setMidwayVisitDate] = useState(null);
+ 
   const [showSitePicker, setShowSitePicker] = useState(false);
-  // const [showHousePicker, setShowHousePicker] = useState(false);
-  // const [showOfficePicker, setShowOfficePicker] = useState(false);
-  // const [showMidwayPicker, setShowMidwayPicker] = useState(false);
-
-
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [dateTime, setDateTime] = useState(null);
   const [error, setError] = useState('');
@@ -103,18 +96,8 @@ const [poupdata,setPoupdata]=useState("")
 
 // VisitCompleted  
 const [visitCompleted,setVisitCompleted]=useState("")
-// // show visit status 
-// const [VisitDate,setVisitDate]=useState("")
-// const [HouseDate,setHouseDate]=useState("")
-// const [OfficeDate,setOfficeDate]=useState("")
-
-// console.log(VisitDate)
 
 
-  // const [date, setDate] = useState(new Date());
-  // const [mode, setMode] = useState('date'); // 'date' or 'time'
-  // const [show, setShow] = useState(false);
-// console.log(siteVisitDate.toDateString(),"siteVisitDate")
   // Dropdown Data   
   const genderData = [
     { key: "1", value: "Male" },
@@ -199,27 +182,32 @@ const visitstatus=[
 //poup funtion
   const openPopup = async () => {
     setModalVisible(true);
-
-    try {
-      const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts/1"
-      );
-      setPoupdata(response.data);
-    } catch (error) {
-      console.log("API Error:", error);
-    }
   };
 
 //poup funtion end
 
 
-  useEffect(() => {
-    fetchStates();
-    noteData();
-    getData();
-    fetchRequirements();
-    fetchTeamLeaders();
-  }, []);
+ 
+useEffect(()=>{
+allapicall()
+},[])
+
+const allapicall=async()=>{
+try {
+  
+ await Promise.all([
+      fetchStates(),
+      noteData(),
+      getData(),
+      fetchRequirements(),
+      fetchTeamLeaders(),
+    ]);
+
+} catch (error) {
+  console.log(error)
+}
+}
+
   const fetchStates = async () => {
     try {
       const res = await axios.get("https://api.almonkdigital.in/api/state-list", {
@@ -1212,6 +1200,7 @@ const notcomplete = () => {
         value={siteVisitDate || new Date()}
         mode="date"
         display={Platform.OS === "ios" ? "spinner" : "default"}
+         minimumDate={new Date()} 
         onChange={handleDateChange(setSiteVisitDate, setShowSitePicker)}
       />
     )}
