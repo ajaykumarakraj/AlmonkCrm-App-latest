@@ -110,7 +110,7 @@ const handlSubmit = async () => {
   // await AsyncStorage.setItem('FILTER_DATA', JSON.stringify(filterData));
 await AsyncStorage.removeItem('FILTER_DATA');
   navigation.navigate('filtertable', filterData);
-  console.log(filterData)
+  // console.log(filterData)
 };
 
 
@@ -153,7 +153,7 @@ useEffect(() => {
 const loadSavedFilters = async () => {
   try {
     const savedData = await AsyncStorage.getItem('FILTER_DATA');
-console.log(savedData,"savedData")
+// console.log(savedData,"savedData")
     if (savedData) {
       const parsedData = JSON.parse(savedData);
 // console.log(parsedData.leadsource)

@@ -17,9 +17,9 @@ import {
 } from 'react-native';
 import ApiClient from '../component/ApiClient';
 import { useAuth } from '../context/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Keychain from 'react-native-keychain';
 import { useRoute } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('window');
 
 const OTPScreen = () => {
@@ -65,33 +65,37 @@ const OTPScreen = () => {
       inputs.current[index - 1].focus();
     }
   };
+const verifyOTP = async () => {
+  const enteredOtp = otp.join('');
 
-  const verifyOTP = async () => {
-    const enteredOtp = otp.join('');
-    if (enteredOtp.length !== 4) {
-      safeAlert('Error', 'Please enter a valid 4-digit OTP');
-      return;
+  if (enteredOtp.length !== 4) {
+    safeAlert('Error', 'Please enter a valid 4-digit OTP');
+    return;
+  }
+
+  try {
+    const response = await ApiClient.post('/verify-login-otp', {
+      mobile: phoneNumber,
+      otp: enteredOtp,
+    });
+
+    if (response.data.status === 200 && response.data.data) {
+      // 🔐 login() hi sab handle karega (Keychain + AsyncStorage)
+      await login(response.data.data, response.data.token);
+
+      safeAlert('Success', 'Logged in successfully!');
+
+      const token = await AsyncStorage.getItem('FCM_TOKEN');
+      setFcmToken(token);
+
+    } else {
+      safeAlert('Invalid OTP', response.data.message || 'Please try again.');
     }
-
-    try {
-      const response = await ApiClient.post('/verify-login-otp', {
-        mobile: phoneNumber,
-        otp: enteredOtp,
-      });
-
-      if (response.data.status === 200 && response.data.data) {
-        await login(response.data.data, response.data.token);
-        safeAlert('Success', 'Logged in successfully!');
-        const token = await AsyncStorage.getItem('FCM_TOKEN');
-        setFcmToken(token);
-      } else {
-        safeAlert('Invalid OTP', response.data.message || 'Please try again.');
-      }
-    } catch (error) {
-      console.error('OTP Verification Error:', error);
-      safeAlert('Error', 'Failed to verify OTP. Try again.');
-    }
-  };
+  } catch (error) {
+    console.error('OTP Verification Error:', error);
+    safeAlert('Error', 'Failed to verify OTP. Try again.');
+  }
+};
 
   const resendOTP = async () => {
     try {

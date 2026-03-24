@@ -43,13 +43,13 @@ const payload={
         company:company,
         city:city,
       }
-        console.log(payload)
+        // console.log(payload)
     try {
       const response = await ApiClient.post("/sign-up", payload);
 
       if (response.data.status === 200) {
-        console.log(response)
-        console.log(response.data.message)
+        // console.log(response)
+        // console.log(response.data.message)
         Alert.alert("Success", response.data.message);
         navigation.navigate("Login");
       } else {

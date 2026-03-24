@@ -1,6 +1,7 @@
 // context/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Keychain from 'react-native-keychain';
 
 const AuthContext = createContext();
 
@@ -11,13 +12,18 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadAuthData = async () => {
+  useEffect(() => {   
+    const loadAuthData = async () => {  
       try {
-        const storedToken = await AsyncStorage.getItem('TOKEN');
+        // 🔐 Token from Keychain
+        const credentials = await Keychain.getGenericPassword();
+// console.log(credentials)
+        // 👤 User from AsyncStorage
         const storedUser = await AsyncStorage.getItem('USER_DATA');
-        if (storedToken && storedUser) {
-          setToken(storedToken);
+// console.log(credentials,storedUser,"check data")
+        if (credentials && storedUser) {
+          // console.log(credentials.password,"password")
+          setToken(credentials.password);
           setUser(JSON.parse(storedUser));
         }
       } catch (err) {
@@ -31,22 +37,38 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (userData, userToken) => {
-    // console.log(userData, "||", userToken)
-    await AsyncStorage.setItem('TOKEN', userToken);
+    // 🔐 Save token securely
+    await Keychain.setGenericPassword("userToken", userToken);
+
+    // 👤 Save user data (non-sensitive)
     await AsyncStorage.setItem('USER_DATA', JSON.stringify(userData));
+
     setToken(userToken);
     setUser(userData);
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem('TOKEN');
+    // 🔐 Remove token
+    await Keychain.resetGenericPassword();
+
+    // 👤 Remove user data
     await AsyncStorage.removeItem('USER_DATA');
+
     setToken(null);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        login,
+        logout,
+        isAuthenticated: !!user,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import Clipboard from "@react-native-clipboard/clipboard";
 import SendIntentAndroid from "react-native-send-intent";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -270,7 +270,7 @@ try {
 
         const fetchedUser = res.data.data;
         // console.log("run")
-        console.log("all data", fetchedUser)
+        // console.log("all data", fetchedUser)
         setName(fetchedUser.name)
         setNumber(fetchedUser.contact)
         setSelectedGender(fetchedUser.gender)
@@ -319,7 +319,7 @@ else if (fetchedUser.visit_status === "House Visit") {
       });
       if (res.data.status === 200) {
         setData(res.data.data);
-        console.log("get note", res.data)
+        // console.log("get note", res.data)
         setVisitCompleted(res.data.schedule_log)
       }
     } catch (error) {
@@ -358,7 +358,7 @@ const renderDateText = (date) =>
     // console.log("date:", formattedDate)
     // console.log("Call status:", Callstatus)
     // console.log("last Call Action:", callAction)
-    console.log("leadkey:", leadkey)
+    // console.log("leadkey:", leadkey)
 
     // Rule 1: Require follow-up date if not archived and no call status selected
     if (leadkey !== '4' && !formattedDate && !Callstatus == "0") {
@@ -397,7 +397,7 @@ const renderDateText = (date) =>
        
 
       };
-      console.log("notes data", updatedUser)
+      // console.log("notes data", updatedUser)
       const res = await ApiClient.post(
         "/save-lead-notes",
         updatedUser,
@@ -448,7 +448,7 @@ const renderDateText = (date) =>
         team_leader: teamLeaderId,
         agent: agentid
       };
-      console.log("post", updatedUser)
+      // console.log("post", updatedUser)
       const res = await ApiClient.post(
         "/save-update-lead-data",
         updatedUser,
@@ -577,7 +577,7 @@ const handleBussinessWhatsapp = async () => {
       agent: agentid,
       call_captured: "whatsapp"
     };
-console.log("postkey",postkey)
+// console.log("postkey",postkey)
     const reswhatsapp = await axios.post(
       "https://api.almonkdigital.in/api/call-capture",
       postkey,

@@ -137,7 +137,7 @@ const Addon = ({ navigation }) => {
           style={styles.input}
           placeholder="Budget"
           placeholderTextColor="#000"
-          keyboardType="number-pad"
+          // keyboardType="number-pad"
           value={budget}
           onChangeText={setBudget}
         />

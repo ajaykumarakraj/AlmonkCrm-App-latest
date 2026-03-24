@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const { user, token } = useAuth();
   const [data, setData] = useState({});
-
+// console.log(token)
   const onRefresh = () => {
     setRefreshing(true);
     numData(); // ✅ fixed
