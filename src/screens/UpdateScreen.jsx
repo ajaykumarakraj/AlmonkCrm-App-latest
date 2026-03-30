@@ -788,6 +788,8 @@ const notcomplete = () => {
   const sortedTeamLeaderList = [...teamleaderlist].sort((a, b) =>
   a.value.localeCompare(b.value)
 );
+
+// console.log(user.role)
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View style={styles.container}>
@@ -836,6 +838,7 @@ const notcomplete = () => {
               onChangeText={setNumber}
               placeholder="Mobile No."
               keyboardType="numeric"
+             editable={user.role === "Admin" ? true : false}
             />
 
             <Text style={styles.textlavel}>Alternate Mobile No.</Text>
@@ -846,6 +849,7 @@ const notcomplete = () => {
               placeholder={altnumber}
               keyboardType="numeric"
               placeholderTextColor="#000"
+               editable={user.role === "Admin" ? true : false}
             />
 
             <Text style={styles.textlavel}>Gender</Text>
